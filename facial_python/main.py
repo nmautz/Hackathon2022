@@ -7,12 +7,26 @@ import uuid
 
 
 def add_video_to_db(path):
+    global people
+
+    # create row in Video DB
     try:
         q = "INSERT INTO Video(file_path, size) VALUES(%s, %s)"
         rs.execute(q, (path, 5))
         con.commit()
     except Exception as e:
         print(str(e) + " SQL ERROR")
+
+
+    # create local spaces for faces
+
+    #mkdir if needed
+
+    #save copy of face
+
+    # create rows for people in video
+    for person in people:
+        print(person)
 
 
 config = None
@@ -79,7 +93,6 @@ current_lag = 0
 people = []
 
 
-
 def setup_video():
     global vid_cod
     global output
@@ -91,8 +104,11 @@ def setup_video():
     print("Setting up for " + path)
 
 
-def add_frame_to_output(target_frame):
+def add_frame_to_output(target_frame, person=None):
     global video_started
+    if person is not None:
+        if person not in people:
+            people.append(person)
     output.write(target_frame)
     video_started = True
 
