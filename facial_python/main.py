@@ -196,6 +196,12 @@ while True:
                 cropped_faces[name] = cropped
                 print("added " + name)
 
+                cv2.imwrite("tmp.jpg", cropped)
+                image = face_recognition.load_image_file("tmp.jpg")
+                facial_encoding = face_recognition.face_encodings(image)[0]
+                known_face_encodings.append(facial_encoding)
+                known_face_names.append(name)
+
             else:
                 print("alread have " + name)
 
