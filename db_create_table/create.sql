@@ -1,10 +1,14 @@
+DROP TABLE IF EXISTS VideoPeople;
+DROP TABLE IF EXISTS Face;
+DROP TABLE IF EXISTS Video;
+
 
 
 CREATE TABLE Face(
 
   f_id INT NOT NULL AUTO_INCREMENT, 
-  name varchar(15) NOT NULL,
-  path varchar(30) NOT NULL,
+  f_name varchar(150) NOT NULL,
+  face_path varchar(100) NOT NULL,
 
   primary key (f_id)
 );
@@ -12,7 +16,7 @@ CREATE TABLE Face(
 CREATE TABLE Video(
 
   v_id int NOT NULL AUTO_INCREMENT,
-  path varchar(30) NOT NULL,
+  file_path varchar(100) NOT NULL,
   size decimal(15,3) NOT NULL,
 
   primary key(v_id)

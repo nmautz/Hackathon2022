@@ -3,21 +3,16 @@ import face_recognition
 import cv2
 import numpy as np
 import mysql.connector as mc
-
-
+import uuid
 
 
 def add_video_to_db(path):
-
     try:
-        q = "INSERT INTO Video(path, size) VALUES(%s, %s)"
+        q = "INSERT INTO Video(file_path, size) VALUES(%s, %s)"
         rs.execute(q, (path, 5))
         con.commit()
     except Exception as e:
-        print(e)
-
-
-
+        print(str(e) + " SQL ERROR")
 
 
 config = None
@@ -41,9 +36,7 @@ con = mc.connect(user=usr, password=pwd, host=hst, database=dab)
 # create a result set
 rs = con.cursor()
 
-
 print("Database Connection Successful!")
-
 
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
@@ -55,8 +48,6 @@ obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
 # Load a second sample picture and learn how to recognize it.
 biden_image = face_recognition.load_image_file("biden.jpeg")
 biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
-
-
 
 # Create arrays of known face encodings and their names
 known_face_encodings = [
@@ -75,26 +66,26 @@ face_names = []
 process_this_frame = True
 
 vid_cod = cv2.VideoWriter_fourcc(*'MJPG')
-video_name_index = 0
-output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280,720))
+output = None
 video_started = False
+path = None
 
 # vars used for recording frames after off screen
-max_stop_lag = 120
+max_stop_lag = 60
 current_lag = 0
 
 
 def setup_video():
-    global video_name_index
     global vid_cod
     global output
     global video_started
-    print(str(video_name_index) + " index")
-    video_name_index = video_name_index + 1
-    output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280, 720))
-    add_video_to_db("./videos/cam_video" + str(video_name_index) + ".avi")
+    global path
+    path = "./videos/" + str(uuid.uuid4()) + ".avi"
+    output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
     video_started = False
 
+
+setup_video()
 
 while True:
     # Grab a single frame of video
@@ -117,10 +108,11 @@ while True:
         if len(face_encodings) == 0 and video_started:
             if current_lag < max_stop_lag:
                 output.write(frame)
-                current_lag = current_lag +1
+                current_lag = current_lag + 1
                 print("recording lag frame")
             else:
                 output.release()
+                add_video_to_db(path)
                 print("finished clip")
                 video_started = False
                 setup_video()
@@ -153,8 +145,6 @@ while True:
             face_names.append(name)
 
     process_this_frame = not process_this_frame
-
-
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
