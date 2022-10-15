@@ -41,7 +41,9 @@ def add_video_to_db(path):
         con.commit()
 
         # add to VideoPeople array
-
+        q = "INSERT INTO VideoPeople(v_path, f_path) VALUES (%s, %s)"
+        rs.execute(q, (path, person_path))
+        con.commit()
 
 
     people = []  # reset array
