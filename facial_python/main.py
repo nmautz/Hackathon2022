@@ -86,9 +86,9 @@ def setup_video():
     print("Setting up for " + path)
 
 
-def add_frame_to_output(frame):
+def add_frame_to_output(target_frame):
     global video_started
-    output.write(frame)
+    output.write(target_frame)
     video_started = True
 
 
