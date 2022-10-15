@@ -74,6 +74,11 @@ path = None
 max_stop_lag = 60
 current_lag = 0
 
+# holds detected people per clip
+
+people = []
+
+
 
 def setup_video():
     global vid_cod
@@ -139,10 +144,10 @@ while True:
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
-                add_frame_to_output(frame)
+                add_frame_to_output(frame, name)
 
             else:
-                add_frame_to_output(frame)
+                add_frame_to_output(frame, name)
 
             face_names.append(name)
 
