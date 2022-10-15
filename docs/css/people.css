@@ -1,8 +1,22 @@
-.people-container {
-
+#people-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    height: 100%;
+    width: 100%;
+    row-gap: 20px;
+    column-gap: 20px;
+    justify-content: space-around;
 }
 
 .person-card{
-    padding: 10px 14px;
-    background-color: red;
+    position: relative;
+    border: solid red;
+    height: 100%;
+    width: 100%;
+    transition: all 200ms;
+    /* background-color: red; */
+}
+
+.person-card:hover{
+    scale: 1.015;
 }
