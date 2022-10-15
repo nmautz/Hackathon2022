@@ -2,6 +2,7 @@ var express = require("express")
 var cors = require("cors")
 var mysql = require("mysql");
 const config = require('./config.json'); 
+const { response } = require("express");
 
 
 var con = mysql.createConnection({
@@ -26,9 +27,25 @@ app.use(cors({
 app.listen(3000)
 
 
-app.get('/', (req,res)=>{
+app.get('/get_videos', (req,res)=>{
 
-  res.write("OK")
-  res.end()
+
+  let result = []
+
+  let q = "SELECT file_path FROM Video"
+
+  con.query(q, (err,response, fields)=>{
+
+    for(let path of response){
+      result.push(path.file_path)
+    }
+
+    res.write(JSON.stringify(result))
+    res.end()
+
+  })
+
+
+
 
 })
