@@ -8,7 +8,15 @@ import mysql.connector as mc
 
 
 def add_video_to_db(path):
-    q = "INSERT INTO Video(path, size) "
+
+    try:
+        q = "INSERT INTO Video(path, size) VALUES(%s, %s)"
+        rs.execute(q, (path, 5))
+        con.commit()
+    except Exception as e:
+        print(e)
+
+
 
 
 
@@ -32,6 +40,7 @@ dab = 'hack'
 con = mc.connect(user=usr, password=pwd, host=hst, database=dab)
 # create a result set
 rs = con.cursor()
+
 
 print("Database Connection Successful!")
 
@@ -70,6 +79,10 @@ video_name_index = 0
 output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280,720))
 video_started = False
 
+# vars used for recording frames after off screen
+max_stop_lag = 15
+current_lag = 0
+
 
 def setup_video():
     global video_name_index
@@ -79,6 +92,7 @@ def setup_video():
     print(str(video_name_index) + " index")
     video_name_index = video_name_index + 1
     output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280, 720))
+    add_video_to_db("./videos/cam_video" + str(video_name_index) + ".avi")
     video_started = False
 
 
@@ -101,10 +115,16 @@ while True:
         face_names = []
 
         if len(face_encodings) == 0 and video_started:
-            output.release()
-            print("finished clip")
-            video_started = False
-            setup_video()
+            if current_lag < max_stop_lag:
+                output.write(frame)
+                current_lag = current_lag +1
+                print("recording lag frame")
+            else:
+                output.release()
+                print("finished clip")
+                video_started = False
+                setup_video()
+                current_lag = 0
 
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
