@@ -83,6 +83,13 @@ def setup_video():
     path = "./videos/" + str(uuid.uuid4()) + ".avi"
     output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
     video_started = False
+    print("Setting up for " + path)
+
+
+def add_frame_to_output(frame):
+    global video_started
+    output.write(frame)
+    video_started = True
 
 
 setup_video()
@@ -107,9 +114,8 @@ while True:
 
         if len(face_encodings) == 0 and video_started:
             if current_lag < max_stop_lag:
-                output.write(frame)
+                add_frame_to_output(frame)
                 current_lag = current_lag + 1
-                print("recording lag frame")
             else:
                 output.release()
                 add_video_to_db(path)
@@ -133,14 +139,10 @@ while True:
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
-                output.write(frame)
-                video_started = True
-                print("added frame")
+                add_frame_to_output(frame)
 
             else:
-                output.write(frame)
-                video_started = True
-                print("added frame")
+                add_frame_to_output(frame)
 
             face_names.append(name)
 
