@@ -1,4 +1,6 @@
 import json
+import os
+
 import face_recognition
 import cv2
 import numpy as np
@@ -8,6 +10,7 @@ import uuid
 
 def add_video_to_db(path):
     global people
+    global cropped_faces
 
     # create row in Video DB
     try:
@@ -17,16 +20,24 @@ def add_video_to_db(path):
     except Exception as e:
         print(str(e) + " SQL ERROR")
 
-
     # create local spaces for faces
 
-    #mkdir if needed
+    # mkdir if needed
+    for person in people:
+        person_path = "./faces/" + str(person)
+        if not os.path.exists(person_path):
+            os.mkdir(person_path)
 
-    #save copy of face
+        # save copy of face
+        file_name = str(uuid.uuid4()) + ".png"
+        cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
 
     # create rows for people in video
     for person in people:
         print(person)
+
+    people = []  # reset array
+    cropped_faces = []
 
 
 config = None
@@ -91,6 +102,7 @@ current_lag = 0
 # holds detected people per clip
 
 people = []
+cropped_faces = {}
 
 
 def setup_video():
@@ -166,6 +178,20 @@ while True:
                 add_frame_to_output(frame, name)
 
             face_names.append(name)
+
+        for (top, right, bottom, left), name in zip(face_locations, face_names):
+
+            if name not in cropped_faces:
+                top *= 4 - 1
+                right *= 4 + 1
+                left *= 4 - 1
+                bottom *= 4 + 1
+                cropped = frame[top:bottom, left:right]
+                cropped_faces[name] = cropped
+                print("added " + name)
+
+            else:
+                print("alread have " + name)
 
     process_this_frame = not process_this_frame
 

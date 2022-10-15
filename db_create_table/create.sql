@@ -9,8 +9,10 @@ CREATE TABLE Face(
   f_id INT NOT NULL AUTO_INCREMENT, 
   f_name varchar(150) NOT NULL,
   face_path varchar(100) NOT NULL,
+  confirmed int NOT NULL,
 
-  primary key (f_id)
+  primary key (f_id),
+  CHECK (confirmed = 0 or confirmed = 1) -- Boolean value
 );
 
 CREATE TABLE Video(
