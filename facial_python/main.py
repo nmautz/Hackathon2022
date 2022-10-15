@@ -21,20 +21,23 @@ def add_video_to_db(path):
         print(str(e) + " SQL ERROR")
 
     # create local spaces for faces
-
     # mkdir if needed
     for person in people:
+        confirmed = 1
+
         person_path = "./faces/" + str(person)
         if not os.path.exists(person_path):
             os.mkdir(person_path)
+            confirmed = 0
 
         # save copy of face
         file_name = str(uuid.uuid4()) + ".png"
         cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
 
-    # create rows for people in video
-    for person in people:
-        print(person)
+        # add person to db
+        q = "INSERT INTO Face(face_path, f_name, confirmed) VALUES (%s, %s, %s)"
+
+        rs.execute(q, (person_path, person, confirmed))
 
     people = []  # reset array
     cropped_faces = []
@@ -116,11 +119,9 @@ def setup_video():
     print("Setting up for " + path)
 
 
-def add_frame_to_output(target_frame, person=None):
+def add_frame_to_output(target_frame):
     global video_started
-    if person is not None:
-        if person not in people:
-            people.append(person)
+
     output.write(target_frame)
     video_started = True
 
@@ -172,10 +173,10 @@ while True:
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
-                add_frame_to_output(frame, name)
+                add_frame_to_output(frame)
 
             else:
-                add_frame_to_output(frame, name)
+                add_frame_to_output(frame)
 
             face_names.append(name)
 
@@ -187,6 +188,11 @@ while True:
                 left *= 4 - 1
                 bottom *= 4 + 1
                 cropped = frame[top:bottom, left:right]
+                if name == 'Unknown':
+                    name = str(uuid.uuid4())
+                    people.append(name)
+                else:
+                    people.append(name)
                 cropped_faces[name] = cropped
                 print("added " + name)
 
