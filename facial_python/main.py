@@ -46,10 +46,20 @@ output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", 
 video_started = False
 
 
+def setup_video():
+    global video_name_index
+    global vid_cod
+    global output
+    global video_started
+    print(str(video_name_index) + " index")
+    video_name_index = video_name_index + 1
+    output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280, 720))
+    video_started = False
+
+
 while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
-    print(frame.shape)
 
     # Only process every other frame of video to save time
     if process_this_frame:
@@ -67,9 +77,9 @@ while True:
 
         if len(face_encodings) == 0 and video_started:
             output.release()
-            print("finish")
+            print("finished clip")
             video_started = False
-            exit(0)
+            setup_video()
 
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
@@ -86,13 +96,16 @@ while True:
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
+                cv2.imshow('video', frame)
                 output.write(frame)
                 video_started = True
+                print("added frame")
 
             else:
                 cv2.imshow('video', frame)
                 output.write(frame)
                 video_started = True
+                print("added frame")
 
             face_names.append(name)
 
