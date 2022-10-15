@@ -2,6 +2,8 @@ import json
 import face_recognition
 import cv2
 import numpy as np
+import mysql.connector as mc
+
 
 config = None
 try:
@@ -14,6 +16,17 @@ except FileNotFoundError:
 except Exception as e:
     print(e)
     exit(1)
+
+usr = config['user']
+pwd = config['pass']
+hst = config['host']
+dab = 'hack'
+# create a connection
+con = mc.connect(user=usr, password=pwd, host=hst, database=dab)
+# create a result set
+rs = con.cursor()
+
+print("Database Connection Successful!")
 
 
 # Get a reference to webcam #0 (the default one)
