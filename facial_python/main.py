@@ -5,6 +5,13 @@ import numpy as np
 import mysql.connector as mc
 
 
+
+
+def add_video_to_db(path):
+    q = "INSERT INTO Video(path, size) "
+
+
+
 config = None
 try:
     f = open('../config.json')
