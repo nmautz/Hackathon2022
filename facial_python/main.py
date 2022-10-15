@@ -80,7 +80,7 @@ output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", 
 video_started = False
 
 # vars used for recording frames after off screen
-max_stop_lag = 15
+max_stop_lag = 120
 current_lag = 0
 
 
