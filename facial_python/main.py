@@ -40,6 +40,12 @@ face_encodings = []
 face_names = []
 process_this_frame = True
 
+vid_cod = cv2.VideoWriter_fourcc(*'XVID')
+video_name_index = 0
+output = cv2.VideoWriter("videos/cam_video" + str(video_name_index) + ".mp4", vid_cod, 20.0, (640,480))
+
+
+
 while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
@@ -47,7 +53,7 @@ while True:
     # Only process every other frame of video to save time
     if process_this_frame:
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        small_frame = cv2.resize(frame, (0, 0), fx=0.6, fy=0.6)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
@@ -61,6 +67,7 @@ while True:
             # See if the face is a match for the known face(s)
             matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
             name = "Unknown"
+            output.write(frame)
 
             # # If a match was found in known_face_encodings, just use the first one.
             # if True in matches:
@@ -72,6 +79,7 @@ while True:
             best_match_index = np.argmin(face_distances)
             if matches[best_match_index]:
                 name = known_face_names[best_match_index]
+                print(name)
             else:
                 print("unknown face!")
 
