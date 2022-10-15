@@ -38,6 +38,11 @@ def add_video_to_db(path):
         q = "INSERT INTO Face(face_path, f_name, confirmed) VALUES (%s, %s, %s)"
 
         rs.execute(q, (person_path, person, confirmed))
+        con.commit()
+
+        # add to VideoPeople array
+
+
 
     people = []  # reset array
     cropped_faces = []
@@ -69,23 +74,23 @@ print("Database Connection Successful!")
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
-# Load a sample picture and learn how to recognize it.
-obama_image = face_recognition.load_image_file("obama.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+face_dirs = os.listdir("./faces")
 
-# Load a second sample picture and learn how to recognize it.
-biden_image = face_recognition.load_image_file("biden.jpeg")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+known_face_encodings = []
+known_face_names = []
+
+for dir in face_dirs:
+    for image_path in os.listdir("./faces/" +dir):
+        image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
+        face_encoding = face_recognition.face_encodings(image)[0]
+        known_face_encodings.append(face_encoding)
+        known_face_names.append(dir)
+
+
+
 
 # Create arrays of known face encodings and their names
-known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding,
-]
-known_face_names = [
-    "Nathan Mautz",
-    "Nia Hill",
-]
+
 
 # Initialize some variables
 face_locations = []
@@ -170,11 +175,15 @@ while True:
 
             # Or instead, use the known face with the smallest distance to the new face
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = known_face_names[best_match_index]
-                add_frame_to_output(frame)
+            best_match_index = None
+            if len(matches) != 0:
+                best_match_index = np.argmin(face_distances)
+                if matches[best_match_index]:
+                    name = known_face_names[best_match_index]
+                    add_frame_to_output(frame)
 
+                else:
+                    add_frame_to_output(frame)
             else:
                 add_frame_to_output(frame)
 
