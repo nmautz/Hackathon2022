@@ -45,14 +45,18 @@ app.get('/get_videos', (req,res)=>{
 
 app.get('/get_video', (req, res) =>{
 
-  let path = "./facial_python/" + req.query.path
+  try{
+    let path = "./facial_python/" + req.query.path
 
 
-  let video = fs.readFileSync(path)
+    let video = fs.readFileSync(path)
 
-  res.write(video)
-  res.end()
-
+    res.write(video)
+    res.end()
+  }
+  catch{
+    res.end()
+  }
   
 })
 

@@ -17,10 +17,24 @@ function addRecording(video,thumbnail)
 
 
 addEventListener('DOMContentLoaded', (event) => {
-    for (var i = 0; i < 100; ++i)
-        addRecording("mike","test_images/kanye.jpg")
-        
+
+    if(document.getElementById("recordings-container").childNodes == 0){
+        get_videos((data)=>{
+
+
+            for(d of data){
+                addRecording("mike","../facial_python/thumbnails" +  d.substring(8, d.length-3) + "png")
+            }
+    
+            
+    
+    
+        })
+    }
+
    
+
+ 
 });
 
 

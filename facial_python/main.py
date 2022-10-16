@@ -11,6 +11,7 @@ import uuid
 def add_video_to_db(path):
     global people
     global cropped_faces
+    global thumbnail
 
     # create row in Video DB
     try:
@@ -19,6 +20,12 @@ def add_video_to_db(path):
         con.commit()
     except Exception as e:
         print(str(e) + " SQL ERROR")
+
+    pathstr = "./thumbnails/" + str(path)[8: len(path)-3] + "png"
+    print(pathstr)
+    # set thumbnail
+
+    cv2.imwrite(pathstr, thumbnail)
 
     # create local spaces for faces
     # mkdir if needed
@@ -34,11 +41,15 @@ def add_video_to_db(path):
         file_name = str(uuid.uuid4()) + ".png"
         cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
 
+
         # add person to db
         q = "INSERT INTO Face(face_path, f_name, confirmed) VALUES (%s, %s, %s)"
 
-        rs.execute(q, (person_path, person, confirmed))
-        con.commit()
+        try:
+            rs.execute(q, (person_path, person, confirmed))
+            con.commit()
+        except Exception as e:
+            print(e)
 
         # add to VideoPeople array
         q = "INSERT INTO VideoPeople(v_path, f_path) VALUES (%s, %s)"
@@ -81,10 +92,15 @@ face_dirs = os.listdir("./faces")
 known_face_encodings = []
 known_face_names = []
 
+thumbnail = None
+
 for dir in face_dirs:
     for image_path in os.listdir("./faces/" +dir):
         image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
-        face_encoding = face_recognition.face_encodings(image)[0]
+        try:
+            face_encoding = face_recognition.face_encodings(image)[0]
+        except:
+            pass
         known_face_encodings.append(face_encoding)
         known_face_names.append(dir)
 
@@ -141,6 +157,7 @@ while True:
 
     # Only process every other frame of video to save time
     if process_this_frame:
+        thumbnail = frame
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
@@ -204,12 +221,19 @@ while True:
                     people.append(name)
                 else:
                     people.append(name)
-                cropped_faces[name] = cropped
+
+                try:
+                    cropped_faces[name] = cropped
+                except:
+                    pass
                 print("added " + name)
 
                 cv2.imwrite("tmp.jpg", cropped)
                 image = face_recognition.load_image_file("tmp.jpg")
-                facial_encoding = face_recognition.face_encodings(image)[0]
+                try:
+                    facial_encoding = face_recognition.face_encodings(image)[0]
+                except:
+                    pass
                 known_face_encodings.append(facial_encoding)
                 known_face_names.append(name)
 

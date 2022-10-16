@@ -26,6 +26,7 @@
     font-size: 450;
     text-align: center;
     transition: all 200ms;
+    pointer-events: none;
 }
 
 .person-card:hover > .unknown {
