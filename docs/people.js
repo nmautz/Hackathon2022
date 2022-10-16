@@ -1,8 +1,15 @@
-function addPerson(image,name)
+function addPerson(image,name,isKnown)
 {  
     let div = document.createElement("div")
+    
     div.className = "person-card"
-    div.id = "kanye"
+
+    if (!isKnown)
+    {
+        let screen = document.createElement("div")
+        screen.className = "unknown fa fa-question"
+        div.appendChild(screen)
+    }
     
 
     let input = document.createElement("input")
@@ -28,6 +35,8 @@ function addPerson(image,name)
 
 
 addEventListener('DOMContentLoaded', (event) => {
-    for (let i = 0; i < 100; ++i)
-        addPerson("test_images/kanye.jpg", "Kanye West")
+    for (let i = 0; i < 10; ++i)
+        addPerson("test_images/kanye.jpg", "Kanye West",true)
+    for (let i = 0; i < 10; ++i)
+        addPerson("test_images/kanye.jpg", "Kanye West",false)
 });
