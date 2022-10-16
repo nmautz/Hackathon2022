@@ -18,6 +18,11 @@
     /* background-color: red; */
 }
 
+.person-card:hover{
+    scale: 1.02;
+    cursor: pointer;
+}
+
 .person-title{
     text-align: center;
     font-size: large;

@@ -2,6 +2,11 @@ function addPerson(image,name)
 {  
     let div = document.createElement("div")
     div.className = "person-card"
+    div.id = "kanye"
+    div.addEventListener('click', (e) => {
+        console.log(e.AT_TARGET.toString)
+        // if (e.AT_TARGET)
+    });
 
     let input = document.createElement("input")
     input.value = name
@@ -21,25 +26,8 @@ function addPerson(image,name)
 }
 
 
-function addRecording(video,thumbnail)
-{
-    let div = document.createElement("div")
-    div.className = "recording"
-    div.addEventListener("click", (e) =>{
-        console.log(video)
-    })
- 
-    let img = document.createElement("img")
-    img.src = thumbnail
-
-    div.appendChild(img)
-
-    document.getElementById("recordings-container").appendChild(div)
-}
-
 
 addEventListener('DOMContentLoaded', (event) => {
     for (let i = 0; i < 100; ++i)
         addPerson("test_images/kanye.jpg", "Kanye West")
-    addRecording("mike","test_images/kanye.jpg")
 });
