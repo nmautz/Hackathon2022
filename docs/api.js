@@ -17,6 +17,31 @@ function get_videos(callback){
   })
 }
 
+function get_people(callback){
+  let url = `${domain}:${port}/get_people`;
 
-get_videos(console.log)
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+
+
+}
+
+
+function get_person(name, callback){
+
+  let url = `${domain}:${port}/get_person?name=` + name;
+
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+
+}
+
+
+
 
