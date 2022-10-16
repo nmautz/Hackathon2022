@@ -28,7 +28,7 @@ CREATE TABLE VideoPeople(
   v_path varchar(100) NOT NULL,
   f_path varchar(100) NOT NULL,
 
-  primary key(v_path),
+  primary key(v_path, f_path),
 
   foreign key (v_path) REFERENCES Video(file_path),
   foreign key (f_path) REFERENCES Face(face_path)

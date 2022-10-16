@@ -39,7 +39,12 @@ def add_video_to_db(path):
 
         # save copy of face
         file_name = str(uuid.uuid4()) + ".png"
-        cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
+        print(person)
+        try:
+
+            cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
+        except Exception as e:
+            print(e)
 
 
         # add person to db
@@ -52,9 +57,12 @@ def add_video_to_db(path):
             print(e)
 
         # add to VideoPeople array
-        q = "INSERT INTO VideoPeople(v_path, f_path) VALUES (%s, %s)"
-        rs.execute(q, (path, person_path))
-        con.commit()
+        try:
+            q = "INSERT INTO VideoPeople(v_path, f_path) VALUES (%s, %s)"
+            rs.execute(q, (path, person_path))
+            con.commit()
+        except Exception as e:
+            pass
 
 
     people = []  # reset array
