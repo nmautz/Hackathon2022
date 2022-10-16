@@ -38,14 +38,17 @@ addEventListener('DOMContentLoaded', (event) => {
 
     get_people((data)=>{
 
-        console.log(data)
+        for(let person in data){
+            console.log(person)
+            let name = person
+            let isConfirmed = data[person][1]
+            let img =  "../" + data[person][0].substring(1, data[person][0].length-1)
+            console.log("Name " + name + " is " + isConfirmed + " img: " + img)
+            addPerson(img, name, isConfirmed)
+        }
 
 
 
     });
 
-    for (let i = 0; i < 10; ++i)
-        addPerson("test_images/kanye.jpg", "Kanye West",true)
-    for (let i = 0; i < 10; ++i)
-        addPerson("test_images/kanye.jpg", "Kanye West",false)
 });
