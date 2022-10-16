@@ -19,4 +19,8 @@ function addRecording(video,thumbnail)
 addEventListener('DOMContentLoaded', (event) => {
     for (var i = 0; i < 100; ++i)
         addRecording("mike","test_images/kanye.jpg")
+        
+   
 });
+
+

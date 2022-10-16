@@ -3,10 +3,7 @@ function addPerson(image,name)
     let div = document.createElement("div")
     div.className = "person-card"
     div.id = "kanye"
-    div.addEventListener('click', (e) => {
-        console.log(e.AT_TARGET.toString)
-        // if (e.AT_TARGET)
-    });
+    
 
     let input = document.createElement("input")
     input.value = name
@@ -17,6 +14,9 @@ function addPerson(image,name)
 
     let img = document.createElement("img")
     img.src = image
+    img.addEventListener('click', (e) => {
+        location.href = "person.html" + "?name=" + name
+    });
 
     div.appendChild(input)
     div.appendChild(img)
