@@ -1,32 +1,36 @@
+DROP TABLE IF EXISTS VideoPeople;
+DROP TABLE IF EXISTS Face;
+DROP TABLE IF EXISTS Video;
+
 
 
 CREATE TABLE Face(
 
-  f_id INT NOT NULL AUTO_INCREMENT, 
-  name varchar(15) NOT NULL,
-  path varchar(30) NOT NULL,
+  f_name varchar(150) NOT NULL,
+  face_path varchar(100) NOT NULL,
+  confirmed int NOT NULL,
 
-  primary key (f_id)
+  primary key (face_path),
+  CHECK (confirmed = 0 or confirmed = 1) -- Boolean value
 );
 
 CREATE TABLE Video(
 
-  v_id int NOT NULL AUTO_INCREMENT,
-  path varchar(30) NOT NULL,
+  file_path varchar(100) NOT NULL,
   size decimal(15,3) NOT NULL,
 
-  primary key(v_id)
+  primary key(file_path)
 );
 
 
 CREATE TABLE VideoPeople(
 
-  v_id int NOT NULL,
-  f_id int NOT NULL,
+  v_path varchar(100) NOT NULL,
+  f_path varchar(100) NOT NULL,
 
-  primary key(v_id),
+  primary key(v_path),
 
-  foreign key (v_id) REFERENCES Video(v_id),
-  foreign key (f_id) REFERENCES Face(f_id)
+  foreign key (v_path) REFERENCES Video(file_path),
+  foreign key (f_path) REFERENCES Face(face_path)
 
 );
