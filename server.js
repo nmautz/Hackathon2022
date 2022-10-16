@@ -57,3 +57,21 @@ app.get('/get_video', (req, res) =>{
 })
 
 
+app.get('/get_people', (req,res)=>{
+
+
+  let result = {}
+  let q = "SELECT f_name FROM Face"
+  con.query(q, (err,response, fields)=>{
+    for(let name of response){
+      result[name.f_name] = "l"
+    }
+
+    res.write(JSON.stringify(result))
+    res.end()
+  })
+
+
+})
+
+
