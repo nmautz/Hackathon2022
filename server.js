@@ -83,4 +83,33 @@ app.get('/get_people', (req,res)=>{
 
 })
 
+app.get('/get_person', (req, res)=>{
 
+  let name = req.query.name;
+  let fpath = "./faces/" + name
+
+  let file_names = fs.readdirSync("./facial_python/faces/" + name)
+
+  q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
+
+  con.query(q, [fpath], (err, response, fields)=>{
+    console.log(1)
+    console.log(response)
+
+    result = {
+
+      "images": file_names,
+      "videos": response
+
+    }
+      
+    res.write(JSON.stringify(result))
+    res.end()
+    
+
+  })
+
+
+
+
+})
