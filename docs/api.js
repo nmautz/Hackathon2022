@@ -10,7 +10,7 @@ function get_videos(callback){
 
   let url = `${domain}:${port}/get_videos`;
 
-  window.fetch(url, {
+  fetch(url, {
     method: 'GET'
   }).then(data => data.json()).then((data)=>{
     callback(data)
@@ -18,13 +18,5 @@ function get_videos(callback){
 }
 
 
+get_videos(console.log)
 
-
-get_videos(function(data){
-
-  for(let d of data){
-    d = d.substring(2, d.length)
-    console.log(d)
-  }
-
-})

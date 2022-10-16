@@ -37,38 +37,10 @@ app.get('/get_videos', (req,res)=>{
     for(let path of response){
       result.push(path.file_path)
     }
+
     res.write(JSON.stringify(result))
     res.end()
   })
 })
 
-app.get('/get_vThumbnail', (req,res)=>{
 
-  if(req.query.path == null){
-    res.write("NO PATH")
-    res.end()
-    return
-  }
-
-  let path = req.query.path
-
-  path = "facial_python/" + path
-
-  extractFrames({
-    input: path,
-    output: './tmp.jpg',
-    offsets: [
-      0
-    ]
-  }).then((path_str) => {
-    fs.readFile(path_str, function(err, data) {
-      if (err) throw err; // Fail if the file can't be read.
-        res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        res.end(data); // Send the file data to the browser.
-    });
-  })
-
-
-
-
-})
