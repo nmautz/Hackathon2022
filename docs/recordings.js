@@ -18,7 +18,9 @@ function addRecording(video,thumbnail)
 
 addEventListener('DOMContentLoaded', (event) => {
 
-    if(document.getElementById("recordings-container").childNodes.length == 1){
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.get('name') == null){
         get_videos((data)=>{
 
 

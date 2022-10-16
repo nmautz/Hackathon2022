@@ -25,7 +25,7 @@ function addAllRecordings(name)
 addEventListener('DOMContentLoaded', (event) => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    if(urlParams.get('name') == null){
+    if(urlParams.get('name') != null){
         addAllRecordings(urlParams.get('name'))
 
         try{
