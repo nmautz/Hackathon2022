@@ -15,6 +15,16 @@ function get_videos(callback){
   }).then(data => data.json()).then((data)=>{
     callback(data)
   })
-
-
 }
+
+
+
+
+get_videos(function(data){
+
+  for(let d of data){
+    d = d.substring(2, d.length)
+    console.log(d)
+  }
+
+})
