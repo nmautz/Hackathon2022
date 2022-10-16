@@ -1,15 +1,53 @@
 import json
+import os
+
 import face_recognition
 import cv2
 import numpy as np
 import mysql.connector as mc
-
-
+import uuid
 
 
 def add_video_to_db(path):
-    q = "INSERT INTO Video(path, size) "
+    global people
+    global cropped_faces
 
+    # create row in Video DB
+    try:
+        q = "INSERT INTO Video(file_path, size) VALUES(%s, %s)"
+        rs.execute(q, (path, 5))
+        con.commit()
+    except Exception as e:
+        print(str(e) + " SQL ERROR")
+
+    # create local spaces for faces
+    # mkdir if needed
+    for person in people:
+        confirmed = 1
+
+        person_path = "./faces/" + str(person)
+        if not os.path.exists(person_path):
+            os.mkdir(person_path)
+            confirmed = 0
+
+        # save copy of face
+        file_name = str(uuid.uuid4()) + ".png"
+        cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
+
+        # add person to db
+        q = "INSERT INTO Face(face_path, f_name, confirmed) VALUES (%s, %s, %s)"
+
+        rs.execute(q, (person_path, person, confirmed))
+        con.commit()
+
+        # add to VideoPeople array
+        q = "INSERT INTO VideoPeople(v_path, f_path) VALUES (%s, %s)"
+        rs.execute(q, (path, person_path))
+        con.commit()
+
+
+    people = []  # reset array
+    cropped_faces = []
 
 
 config = None
@@ -35,29 +73,26 @@ rs = con.cursor()
 
 print("Database Connection Successful!")
 
-
 # Get a reference to webcam #0 (the default one)
 video_capture = cv2.VideoCapture(0)
 
-# Load a sample picture and learn how to recognize it.
-obama_image = face_recognition.load_image_file("obama.jpg")
-obama_face_encoding = face_recognition.face_encodings(obama_image)[0]
+face_dirs = os.listdir("./faces")
 
-# Load a second sample picture and learn how to recognize it.
-biden_image = face_recognition.load_image_file("biden.jpeg")
-biden_face_encoding = face_recognition.face_encodings(biden_image)[0]
+known_face_encodings = []
+known_face_names = []
+
+for dir in face_dirs:
+    for image_path in os.listdir("./faces/" +dir):
+        image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
+        face_encoding = face_recognition.face_encodings(image)[0]
+        known_face_encodings.append(face_encoding)
+        known_face_names.append(dir)
+
 
 
 
 # Create arrays of known face encodings and their names
-known_face_encodings = [
-    obama_face_encoding,
-    biden_face_encoding,
-]
-known_face_names = [
-    "Nathan Mautz",
-    "Nia Hill",
-]
+
 
 # Initialize some variables
 face_locations = []
@@ -66,21 +101,39 @@ face_names = []
 process_this_frame = True
 
 vid_cod = cv2.VideoWriter_fourcc(*'MJPG')
-video_name_index = 0
-output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280,720))
+output = None
 video_started = False
+path = None
+
+# vars used for recording frames after off screen
+max_stop_lag = 60
+current_lag = 0
+
+# holds detected people per clip
+
+people = []
+cropped_faces = {}
 
 
 def setup_video():
-    global video_name_index
     global vid_cod
     global output
     global video_started
-    print(str(video_name_index) + " index")
-    video_name_index = video_name_index + 1
-    output = cv2.VideoWriter("./videos/cam_video" + str(video_name_index) + ".avi", vid_cod, 20.0, (1280, 720))
+    global path
+    path = "./videos/" + str(uuid.uuid4()) + ".avi"
+    output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
     video_started = False
+    print("Setting up for " + path)
 
+
+def add_frame_to_output(target_frame):
+    global video_started
+
+    output.write(target_frame)
+    video_started = True
+
+
+setup_video()
 
 while True:
     # Grab a single frame of video
@@ -101,10 +154,16 @@ while True:
         face_names = []
 
         if len(face_encodings) == 0 and video_started:
-            output.release()
-            print("finished clip")
-            video_started = False
-            setup_video()
+            if current_lag < max_stop_lag:
+                add_frame_to_output(frame)
+                current_lag = current_lag + 1
+            else:
+                output.release()
+                add_video_to_db(path)
+                print("finished clip")
+                video_started = False
+                setup_video()
+                current_lag = 0
 
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
@@ -118,23 +177,46 @@ while True:
 
             # Or instead, use the known face with the smallest distance to the new face
             face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-            best_match_index = np.argmin(face_distances)
-            if matches[best_match_index]:
-                name = known_face_names[best_match_index]
-                output.write(frame)
-                video_started = True
-                print("added frame")
+            best_match_index = None
+            if len(matches) != 0:
+                best_match_index = np.argmin(face_distances)
+                if matches[best_match_index]:
+                    name = known_face_names[best_match_index]
+                    add_frame_to_output(frame)
 
+                else:
+                    add_frame_to_output(frame)
             else:
-                output.write(frame)
-                video_started = True
-                print("added frame")
+                add_frame_to_output(frame)
 
             face_names.append(name)
 
+        for (top, right, bottom, left), name in zip(face_locations, face_names):
+
+            if name not in cropped_faces:
+                top *= 4 - 1
+                right *= 4 + 1
+                left *= 4 - 1
+                bottom *= 4 + 1
+                cropped = frame[top:bottom, left:right]
+                if name == 'Unknown':
+                    name = str(uuid.uuid4())
+                    people.append(name)
+                else:
+                    people.append(name)
+                cropped_faces[name] = cropped
+                print("added " + name)
+
+                cv2.imwrite("tmp.jpg", cropped)
+                image = face_recognition.load_image_file("tmp.jpg")
+                facial_encoding = face_recognition.face_encodings(image)[0]
+                known_face_encodings.append(facial_encoding)
+                known_face_names.append(name)
+
+            else:
+                print("alread have " + name)
+
     process_this_frame = not process_this_frame
-
-
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
