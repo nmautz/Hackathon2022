@@ -29,8 +29,7 @@ function get_people(callback){
 
 }
 
-<<<<<<< HEAD
-=======
+
 
 function get_person(name, callback){
 
@@ -45,6 +44,3 @@ function get_person(name, callback){
 }
 
 
-
-
->>>>>>> api

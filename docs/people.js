@@ -35,6 +35,15 @@ function addPerson(image,name,isKnown)
 
 
 addEventListener('DOMContentLoaded', (event) => {
+
+    get_people((data)=>{
+
+        console.log(data)
+
+
+
+    });
+
     for (let i = 0; i < 10; ++i)
         addPerson("test_images/kanye.jpg", "Kanye West",true)
     for (let i = 0; i < 10; ++i)
