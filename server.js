@@ -66,14 +66,14 @@ app.get('/get_people', (req,res)=>{
 
 
 
-  let q = "SELECT f_name FROM Face"
+  let q = "SELECT f_name, confirmed FROM Face"
   con.query(q, (err,response, fields)=>{
     for(let name of response){
 
       let f1 = fs.readdirSync("./facial_python/faces/" + name.f_name)[0]
       let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
 
-      result[name.f_name] = JSON.stringify(img_path)
+      result[name.f_name] = [JSON.stringify(img_path), name.confirmed]
     }
 
     res.write(JSON.stringify(result))
