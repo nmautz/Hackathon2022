@@ -5,7 +5,7 @@ function addPerson(image,name)
 
     let input = document.createElement("input")
     input.value = name
-    input.addEventListener("keyup", (event) =>{
+    input.addEventListener("keyup", (e) =>{
         console.log("Name Changed")
     });
     input.className = "person-title"
@@ -21,11 +21,25 @@ function addPerson(image,name)
 }
 
 
-// function
+function addRecording(video,thumbnail)
+{
+    let div = document.createElement("div")
+    div.className = "recording"
+    div.addEventListener("click", (e) =>{
+        console.log(video)
+    })
+ 
+    let img = document.createElement("img")
+    img.src = thumbnail
+
+    div.appendChild(img)
+
+    document.getElementById("recordings-container").appendChild(div)
+}
 
 
 addEventListener('DOMContentLoaded', (event) => {
     for (let i = 0; i < 100; ++i)
         addPerson("test_images/kanye.jpg", "Kanye West")
-
+    addRecording("mike","test_images/kanye.jpg")
 });
