@@ -75,9 +75,13 @@ app.get('/get_people', (req,res)=>{
     for(let name of response){
 
       let f1 = fs.readdirSync("./facial_python/faces/" + name.f_name)[0]
-      let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
+      if (f1 != undefined){
+        let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
 
-      result[name.f_name] = [JSON.stringify(img_path), name.confirmed]
+        result[name.f_name] = [JSON.stringify(img_path), name.confirmed]
+
+      }
+
     }
 
     res.write(JSON.stringify(result))

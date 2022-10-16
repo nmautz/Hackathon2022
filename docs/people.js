@@ -39,12 +39,15 @@ addEventListener('DOMContentLoaded', (event) => {
     get_people((data)=>{
 
         for(let person in data){
-            console.log(person)
             let name = person
             let isConfirmed = data[person][1]
             let img =  "../" + data[person][0].substring(1, data[person][0].length-1)
-            console.log("Name " + name + " is " + isConfirmed + " img: " + img)
-            addPerson(img, name, isConfirmed)
+            if(!img.includes('undefined')){
+                addPerson(img, name, isConfirmed)
+
+            }else{
+                console.log(data[person])
+            }
         }
 
 

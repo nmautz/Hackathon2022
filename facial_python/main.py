@@ -140,21 +140,28 @@ cropped_faces = {}
 
 
 def setup_video():
-    global vid_cod
-    global output
     global video_started
-    global path
-    path = "./videos/" + str(uuid.uuid4()) + ".avi"
-    output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
     video_started = False
-    print("Setting up for " + path)
 
 
 def add_frame_to_output(target_frame):
     global video_started
+    global  output
+    global vid_cod
+    global path
+
+
+
+
+
+    if not video_started:
+        path = "./videos/" + str(uuid.uuid4()) + ".avi"
+        print("Setting up for " + path)
+        output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
+        video_started = True
 
     output.write(target_frame)
-    video_started = True
+
 
 
 setup_video()
@@ -246,8 +253,7 @@ while True:
                 known_face_names.append(name)
 
             else:
-                print("alread have " + name)
-
+                pass
     process_this_frame = not process_this_frame
 
     # Hit 'q' on the keyboard to quit!
