@@ -37,35 +37,76 @@ app.get('/get_videos', (req,res)=>{
     for(let path of response){
       result.push(path.file_path)
     }
+
     res.write(JSON.stringify(result))
     res.end()
   })
 })
 
-app.get('/get_vThumbnail', (req,res)=>{
+app.get('/get_video', (req, res) =>{
 
-  if(req.query.path == null){
-    res.write("NO PATH")
+  let path = "./facial_python/" + req.query.path
+
+
+  let video = fs.readFileSync(path)
+
+  res.write(video)
+  res.end()
+
+  
+})
+
+
+app.get('/get_people', (req,res)=>{
+
+
+  let result = {}
+
+
+
+
+
+  let q = "SELECT f_name FROM Face"
+  con.query(q, (err,response, fields)=>{
+    for(let name of response){
+
+      let f1 = fs.readdirSync("./facial_python/faces/" + name.f_name)[0]
+      let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
+
+      result[name.f_name] = JSON.stringify(img_path)
+    }
+
+    res.write(JSON.stringify(result))
     res.end()
-    return
-  }
+  })
 
-  let path = req.query.path
 
-  path = "facial_python/" + path
+})
 
-  extractFrames({
-    input: path,
-    output: './tmp.jpg',
-    offsets: [
-      0
-    ]
-  }).then((path_str) => {
-    fs.readFile(path_str, function(err, data) {
-      if (err) throw err; // Fail if the file can't be read.
-        res.writeHead(200, {'Content-Type': 'image/jpeg'});
-        res.end(data); // Send the file data to the browser.
-    });
+app.get('/get_person', (req, res)=>{
+
+  let name = req.query.name;
+  let fpath = "./faces/" + name
+
+  let file_names = fs.readdirSync("./facial_python/faces/" + name)
+
+  q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
+
+  con.query(q, [fpath], (err, response, fields)=>{
+    console.log(1)
+    console.log(response)
+
+    result = {
+
+      "images": file_names,
+      "videos": response
+
+    }
+      
+    res.write(JSON.stringify(result))
+    res.end()
+    
+
   })
 
 

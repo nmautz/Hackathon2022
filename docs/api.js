@@ -10,7 +10,17 @@ function get_videos(callback){
 
   let url = `${domain}:${port}/get_videos`;
 
-  window.fetch(url, {
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+}
+
+function get_people(callback){
+  let url = `${domain}:${port}/get_people`;
+
+  fetch(url, {
     method: 'GET'
   }).then(data => data.json()).then((data)=>{
     callback(data)
@@ -19,3 +29,22 @@ function get_videos(callback){
 
 }
 
+<<<<<<< HEAD
+=======
+
+function get_person(name, callback){
+
+  let url = `${domain}:${port}/get_person?name=` + name;
+
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+
+}
+
+
+
+
+>>>>>>> api
