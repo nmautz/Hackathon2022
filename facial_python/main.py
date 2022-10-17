@@ -153,7 +153,6 @@ def add_frame_to_output(target_frame):
         print("Setting up for " + path)
         try:
             output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
-            time.sleep(3)
         except Exception as e:
             print("Loading anyways")
         video_started = True
