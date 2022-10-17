@@ -1,5 +1,6 @@
 import json
 import os
+import time
 
 import face_recognition
 import cv2
@@ -21,12 +22,14 @@ def add_video_to_db(path):
     except Exception as e:
         print(str(e) + " SQL ERROR")
 
-    pathstr = "./thumbnails/" + str(path)[8: len(path)-3] + "png"
+    pathstr = "./thumbnails" + str(path)[8: len(path) - 4] + "png"
     print(pathstr)
     # set thumbnail
 
-    cv2.imwrite(pathstr, thumbnail)
-
+    try:
+        cv2.imwrite(pathstr, thumbnail)
+    except Exception as e:
+        print(pathstr)
     # create local spaces for faces
     # mkdir if needed
     for person in people:
@@ -46,7 +49,6 @@ def add_video_to_db(path):
         except Exception as e:
             print(e)
 
-
         # add person to db
         q = "INSERT INTO Face(face_path, f_name, confirmed) VALUES (%s, %s, %s)"
 
@@ -63,7 +65,6 @@ def add_video_to_db(path):
             con.commit()
         except Exception as e:
             pass
-
 
     people = []  # reset array
     cropped_faces = []
@@ -103,7 +104,7 @@ known_face_names = []
 thumbnail = None
 
 for dir in face_dirs:
-    for image_path in os.listdir("./faces/" +dir):
+    for image_path in os.listdir("./faces/" + dir):
         image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
         try:
             face_encoding = face_recognition.face_encodings(image)[0]
@@ -111,9 +112,6 @@ for dir in face_dirs:
             pass
         known_face_encodings.append(face_encoding)
         known_face_names.append(dir)
-
-
-
 
 # Create arrays of known face encodings and their names
 
@@ -124,7 +122,7 @@ face_encodings = []
 face_names = []
 process_this_frame = True
 
-vid_cod = cv2.VideoWriter_fourcc(*'MJPG')
+vid_cod = cv2.VideoWriter_fourcc(*'VP80')
 output = None
 video_started = False
 path = None
@@ -146,22 +144,21 @@ def setup_video():
 
 def add_frame_to_output(target_frame):
     global video_started
-    global  output
+    global output
     global vid_cod
     global path
 
-
-
-
-
     if not video_started:
-        path = "./videos/" + str(uuid.uuid4()) + ".avi"
+        path = "./videos/" + str(uuid.uuid4()) + ".webm"
         print("Setting up for " + path)
-        output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
+        try:
+            output = cv2.VideoWriter(path, vid_cod, 20.0, (1280, 720))
+            time.sleep(3)
+        except Exception as e:
+            print("Loading anyways")
         video_started = True
 
     output.write(target_frame)
-
 
 
 setup_video()

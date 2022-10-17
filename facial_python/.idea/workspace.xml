@@ -2,7 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5fba79c0-125b-4eb4-b151-9e35aeeeef4b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../index.html" beforeDir="false" afterPath="$PROJECT_DIR$/../index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/074cce76-d21a-46e9-8426-f3186d899455.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/3a6bc3c6-92ed-4e23-84e5-88389200cf6f.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/41f72ea6-f2db-4316-a894-4ee2080580d1.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/4507d2e1-ad5d-4b67-a616-412c75de5d78.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/53ae7365-a0fe-44f3-8ab6-ba3a098b76dc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/6bb01ef6-d5fa-4214-a2da-3941f472c24a.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/a118d6f5-02e0-4ea0-89d4-cf49aa7971b5.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/a7fac065-30bc-4330-a819-0c0b28a8323a.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/b4d85672-3b12-422d-9ad2-3585d3cabf04.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thumbnails/fe9c60a2-738e-4c2f-b09b-6ac1b68c5104.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/tmp.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server.js" beforeDir="false" afterPath="$PROJECT_DIR$/../server.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,13 +117,28 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/main.py</url>
-          <line>44</line>
+          <line>47</line>
           <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>189</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>29</line>
+          <option name="timeStamp" value="10" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="current_lag" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/facial_python$main.coverage" NAME="main Coverage Results" MODIFIED="1665959910709" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/facial_python$main.coverage" NAME="main Coverage Results" MODIFIED="1666033135672" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

@@ -116,8 +116,17 @@ app.get('/get_person', (req, res)=>{
     
 
   })
+})
 
+app.get("/get_video", (req, res)=>{
 
+  let file = fs.readFileSync("./test.avi")
+
+  res.write(file)
+
+  res.end()
 
 
 })
+
+
