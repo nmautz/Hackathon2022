@@ -3,3 +3,7 @@ node_modules
 
 facial_python/faces
 facial_python/videos
+facial_python/thumbnails
+facial_python/.idea/workspace.xml
+facial_python/tmp.jpg
+

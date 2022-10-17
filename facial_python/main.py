@@ -170,7 +170,7 @@ while True:
     if process_this_frame:
         thumbnail = frame
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        small_frame = cv2.resize(frame, (0, 0), fx=1, fy=1)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
@@ -222,10 +222,10 @@ while True:
         for (top, right, bottom, left), name in zip(face_locations, face_names):
 
             if name not in cropped_faces:
-                top *= 4 - 1
-                right *= 4 + 1
-                left *= 4 - 1
-                bottom *= 4 + 1
+                top -=  1
+                right += 1
+                left -= 1
+                bottom += 1
                 cropped = frame[top:bottom, left:right]
                 if name == 'Unknown':
                     name = str(uuid.uuid4())
@@ -239,7 +239,10 @@ while True:
                     pass
                 print("added " + name)
 
-                cv2.imwrite("tmp.jpg", cropped)
+                try:
+                    cv2.imwrite("tmp.jpg", cropped)
+                except:
+                    pass
                 image = face_recognition.load_image_file("tmp.jpg")
                 try:
                     facial_encoding = face_recognition.face_encodings(image)[0]
