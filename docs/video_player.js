@@ -43,7 +43,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
   get_people_in_video(title, (people_response)=>{
 
-    console.log(people_response)
+    for(let person of people_response){
+      console.log(person)
+
+      add_person_to_video_people(person, "");
+
+    }
 
 
 
