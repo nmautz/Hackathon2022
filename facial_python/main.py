@@ -127,6 +127,10 @@ output = None
 video_started = False
 path = None
 
+
+max_frames = 60 # specifies max video length
+current_frames = 0
+
 # vars used for recording frames after off screen
 max_stop_lag = 60
 current_lag = 0
@@ -162,6 +166,18 @@ def add_frame_to_output(target_frame):
 
 setup_video()
 
+
+def end_video():
+    global video_started
+    output.release()
+    add_video_to_db(path)
+    print("finished clip")
+    video_started = False
+    setup_video()
+    current_lag = 0
+    return current_lag
+
+
 while True:
     # Grab a single frame of video
     ret, frame = video_capture.read()
@@ -181,17 +197,21 @@ while True:
 
         face_names = []
 
+
+        if current_frames >= max_frames:
+            current_lag = end_video()
+            current_frames = 0
+        else:
+            current_frames = current_frames +1
+
+
+
         if len(face_encodings) == 0 and video_started:
             if current_lag < max_stop_lag:
                 add_frame_to_output(frame)
                 current_lag = current_lag + 1
             else:
-                output.release()
-                add_video_to_db(path)
-                print("finished clip")
-                video_started = False
-                setup_video()
-                current_lag = 0
+                current_lag = end_video()
 
         for face_encoding in face_encodings:
             # See if the face is a match for the known face(s)
