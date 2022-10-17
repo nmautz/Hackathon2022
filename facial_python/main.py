@@ -67,7 +67,7 @@ def add_video_to_db(path):
             pass
 
     people = []  # reset array
-    cropped_faces = []
+    cropped_faces = {}
 
 
 config = None
