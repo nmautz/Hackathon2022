@@ -154,9 +154,19 @@ app.get("/get_people_in_video", (req,res)=>{
   //select * from VideoPeople where (v_path = "./videos/0625c1c5-0f59-48a8-b59b-11f4b7cb3041.webm")
   console.log(video_path)
   q = "SELECT f_path FROM VideoPeople WHERE(v_path=?)"
+
   con.query(q, [video_path], (err, response, fields)=>{
 
-    console.log(response)
+    let result = []
+
+    for(let resp of response){
+      let f_path = resp.f_path
+
+      result.push(resp.f_path.substring(8,f_path.length))
+    }
+
+    res.write(JSON.stringify(result));
+    res.end()
 
   })
 
