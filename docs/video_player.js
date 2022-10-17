@@ -44,7 +44,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
   get_people_in_video(title, (people_response)=>{
 
     for(let person of people_response){
-      console.log(person)
+      let key = Object.keys(person)[0]
+      let img_src = "../facial_python/faces/" + key + "/" + person[key]
+
+      add_person_to_video_people(key, img_src)
 
     }
 
