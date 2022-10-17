@@ -10,7 +10,7 @@ function addAllRecordings(name)
         let videos = data['videos']
 
         for(let video in videos){
-            addRecording("mike","../facial_python/thumbnails" +  videos[video]['v_path'].substring(8, videos[video]['v_path'].length-3) + "png")
+            addRecording("mike","../facial_python/thumbnails" +  videos[video]['v_path'].substring(8, videos[video]['v_path'].length-4) + "png")
 
         }
 
