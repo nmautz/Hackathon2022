@@ -18,7 +18,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
   source.src = "../facial_python/videos/" + title + ".webm"
   video.load()
 
-  urlParams.get("")
   
 
 
