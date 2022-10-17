@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const video = document.getElementById("video");
   const source = document.getElementById("vid-src");
 
-  source.src = title
+  source.src = "../facial_python/videos/" + title + ".webm"
   video.load()
 
   urlParams.get("")
