@@ -26,13 +26,12 @@ def add_video_to_db(path):
         print(str(e) + " SQL ERROR")
 
     pathstr = "./thumbnails" + str(path)[8: len(path) - 4] + "png"
-    print(pathstr)
     # set thumbnail
 
     try:
         cv2.imwrite(pathstr, thumbnail)
     except Exception as e:
-        print(pathstr)
+        print(e)
     # create local spaces for faces
     # mkdir if needed
     for person in people:
@@ -45,7 +44,6 @@ def add_video_to_db(path):
 
         # save copy of face
         file_name = str(uuid.uuid4()) + ".png"
-        print(person)
         try:
 
             cv2.imwrite(person_path + "/" + file_name, cropped_faces[person])
@@ -184,6 +182,7 @@ def end_video():
 while True:
 
     if current_frames >= max_frames:
+        print("No face detected for max time \nEnding video...")
         current_lag = end_video()
         current_frames = 0
     else:
@@ -218,6 +217,7 @@ while True:
                 add_frame_to_output(frame)
                 current_lag = current_lag + 1
             else:
+                print("Max video length reached\nEnding video...")
                 current_lag = end_video()
 
         for face_encoding in face_encodings:
