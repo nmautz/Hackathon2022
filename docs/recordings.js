@@ -25,7 +25,7 @@ addEventListener('DOMContentLoaded', (event) => {
 
 
             for(d of data){
-                addRecording("mike","../facial_python/thumbnails" +  d.substring(8, d.length-4) + "png")
+                addRecording(d.substring(9, d.length-5),"../facial_python/thumbnails" +  d.substring(8, d.length-4) + "png")
             }
     
             
