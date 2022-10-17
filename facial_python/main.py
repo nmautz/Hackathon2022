@@ -8,6 +8,9 @@ import numpy as np
 import mysql.connector as mc
 import uuid
 
+PROCESS_EVERY_FRAMES = 5
+PROCESS_QUALITY = 1
+
 
 def add_video_to_db(path):
     global people
@@ -186,18 +189,17 @@ while True:
     else:
         current_frames = current_frames + 1
 
-        
+
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
 
 
     # Only process every third frame of video to save time
-    PROCESS_EVERY_FRAMES = 5
     if process_this_frame == 0:
         thumbnail = frame
         # Resize frame of video to 1/4 size for faster face recognition processing
-        small_frame = cv2.resize(frame, (0, 0), fx=1, fy=1)
+        small_frame = cv2.resize(frame, (0, 0), fx=PROCESS_QUALITY, fy=PROCESS_QUALITY)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
