@@ -44,3 +44,14 @@ function get_person(name, callback){
 }
 
 
+function get_people_in_video(v_title, callback){
+
+  let url = `${domain}:${port}/get_people_in_video?title=` + v_title;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+
+}
+

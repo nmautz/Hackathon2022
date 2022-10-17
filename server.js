@@ -145,13 +145,14 @@ app.get("/get_video", (req, res)=>{
 })
 
 
-app.get("/people_in_video", (req,res=>{
+app.get("/get_people_in_video", (req,res)=>{
 
   let video_title = req.query.title;
 
-  let video_path = "./facial_python/videos/" + video_title + ".webm";
+  let video_path = "./videos/" + video_title + ".webm";
 
   //select * from VideoPeople where (v_path = "./videos/0625c1c5-0f59-48a8-b59b-11f4b7cb3041.webm")
+  console.log(video_path)
   q = "SELECT f_path FROM VideoPeople WHERE(v_path=?)"
   con.query(q, [video_path], (err, response, fields)=>{
 
@@ -161,4 +162,4 @@ app.get("/people_in_video", (req,res=>{
 
 
 
-}))
+})

@@ -39,6 +39,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
   source.src = "../facial_python/videos/" + title + ".webm"
   video.load()
 
+
+
+  get_people_in_video(title, (people_response)=>{
+
+    console.log(people_response)
+
+
+
+  })
+
   
 
 
