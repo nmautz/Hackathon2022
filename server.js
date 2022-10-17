@@ -100,33 +100,37 @@ app.get('/get_person', (req, res)=>{
 
   let name = req.query.name;
   let fpath = "./faces/" + name
+  let valid = 1
+  let file_names = undefined
   try{
-    let file_names = fs.readdirSync("./facial_python/faces/" + name)
+    file_names = fs.readdirSync("./facial_python/faces/" + name)
   }
   catch{
     console.log("Face Database corrupted on " + name)
     res.write("ERROR")
-    res.end()
+    valid = 0
   }
 
-  q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
+  if(valid){
+    q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
 
-  con.query(q, [fpath], (err, response, fields)=>{
-    console.log(1)
-    console.log(response)
+    con.query(q, [fpath], (err, response, fields)=>{
+      console.log(1)
+      console.log(response)
 
-    result = {
+      result = {
 
-      "images": file_names,
-      "videos": response
+        "images": file_names,
+        "videos": response
 
-    }
+      }
+        
+      res.write(JSON.stringify(result))
+      res.end()
       
-    res.write(JSON.stringify(result))
-    res.end()
-    
 
-  })
+    })
+  }
 })
 
 app.get("/get_video", (req, res)=>{
