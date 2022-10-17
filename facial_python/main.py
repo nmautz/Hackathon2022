@@ -120,7 +120,7 @@ for dir in face_dirs:
 face_locations = []
 face_encodings = []
 face_names = []
-process_this_frame = True
+process_this_frame = 0
 
 vid_cod = cv2.VideoWriter_fourcc(*'VP80')
 output = None
@@ -179,11 +179,22 @@ def end_video():
 
 
 while True:
+
+    if current_frames >= max_frames:
+        current_lag = end_video()
+        current_frames = 0
+    else:
+        current_frames = current_frames + 1
+
+        
     # Grab a single frame of video
     ret, frame = video_capture.read()
 
-    # Only process every other frame of video to save time
-    if process_this_frame:
+
+
+    # Only process every third frame of video to save time
+    PROCESS_EVERY_FRAMES = 5
+    if process_this_frame == 0:
         thumbnail = frame
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=1, fy=1)
@@ -197,12 +208,6 @@ while True:
 
         face_names = []
 
-
-        if current_frames >= max_frames:
-            current_lag = end_video()
-            current_frames = 0
-        else:
-            current_frames = current_frames +1
 
 
 
@@ -273,7 +278,11 @@ while True:
 
             else:
                 pass
-    process_this_frame = not process_this_frame
+    else:
+        if video_started:
+            output.write(frame)
+
+    process_this_frame = (process_this_frame +1)%PROCESS_EVERY_FRAMES
 
     # Hit 'q' on the keyboard to quit!
     if cv2.waitKey(1) & 0xFF == ord('q'):
