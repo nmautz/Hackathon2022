@@ -46,8 +46,6 @@ document.addEventListener("DOMContentLoaded", ()=>{
     for(let person of people_response){
       console.log(person)
 
-      add_person_to_video_people(person, "");
-
     }
 
 

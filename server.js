@@ -115,8 +115,6 @@ app.get('/get_person', (req, res)=>{
     q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
 
     con.query(q, [fpath], (err, response, fields)=>{
-      console.log(1)
-      console.log(response)
 
       result = {
 
@@ -152,7 +150,6 @@ app.get("/get_people_in_video", (req,res)=>{
   let video_path = "./videos/" + video_title + ".webm";
 
   //select * from VideoPeople where (v_path = "./videos/0625c1c5-0f59-48a8-b59b-11f4b7cb3041.webm")
-  console.log(video_path)
   q = "SELECT f_path FROM VideoPeople WHERE(v_path=?)"
 
   con.query(q, [video_path], (err, response, fields)=>{
@@ -161,8 +158,17 @@ app.get("/get_people_in_video", (req,res)=>{
 
     for(let resp of response){
       let f_path = resp.f_path
+      
+      f_dir = "./facial_python/" + f_path.substring(2, f_path.length) + "/"
 
-      result.push(resp.f_path.substring(8,f_path.length))
+      let pics = fs.readdirSync(f_dir)
+      let name = resp.f_path.substring(8,f_path.length)
+
+      let obj = {}
+
+      obj[name] = pics[0]
+
+      result.push(obj)
     }
 
     res.write(JSON.stringify(result));
