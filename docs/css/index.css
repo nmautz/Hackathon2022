@@ -1,13 +1,14 @@
 .status-bar{
   display: flex;
   text-align: center;
-  justify-content: space-between;
-  max-width: 15vw;
+  justify-content: space-evenly ;
+  max-width: 20vw;
   background-color: rgb(226, 226, 226);
   padding: 1% ;
   border-radius: 10px;
   cursor: pointer;
   transition: all ease-in-out 100ms;
+  align-items: center;
 }
 
 
@@ -16,6 +17,12 @@
   background-color: rgb(214, 214, 214);
 }
 
+
+.status-text{
+  user-select: none;
+  width: 55%;
+  text-align: center;
+}
 
 .green-circle, .yellow-circle, .red-circle{
 
