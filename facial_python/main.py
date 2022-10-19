@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 import mysql.connector as mc
 import uuid
+import os.path
 
 PROCESS_EVERY_FRAMES = 5
 PROCESS_QUALITY = 1
@@ -286,9 +287,10 @@ while True:
 
     process_this_frame = (process_this_frame +1)%PROCESS_EVERY_FRAMES
 
-    # Hit 'q' on the keyboard to quit!
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+
+    if os.path.isfile("lock.lck"):
         break
+
 
 # Release handle to the webcam
 video_capture.release()
