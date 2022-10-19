@@ -179,3 +179,13 @@ app.get("/get_people_in_video", (req,res)=>{
 
 
 })
+
+app.get("/get_status", (req,res)=>{
+
+
+  
+
+
+
+
+})

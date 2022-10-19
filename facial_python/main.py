@@ -8,6 +8,7 @@ import numpy as np
 import mysql.connector as mc
 import uuid
 import os.path
+from datetime import datetime
 
 PROCESS_EVERY_FRAMES = 5
 PROCESS_QUALITY = 1
@@ -181,6 +182,19 @@ def end_video():
 
 
 while True:
+
+    now = datetime.now()
+
+    if now.second == 0:
+        f = open("status.json", 'w')
+        x = '{      "status": "OK", "time": { "year":' \
+            + str(now.year) + ', "month":  ' \
+            + str(now.month) + ', "day":'\
+            + str(now.day) +', "hour": '\
+            + str(now.hour)  + ', "minute": '\
+            + str(now.minute) + '}    }'
+        f.write(x)
+        print("Wrote")
 
     if current_frames >= max_frames:
         print("No face detected for max time \nEnding video...")
