@@ -56,27 +56,48 @@ function get_people_in_video(v_title, callback){
 }
 
 function get_status(callback){
+
   let url = `${domain}:${port}/get_status`;
   fetch(url, {
     method: 'GET'
   }).then(data => data.json()).then((data)=>{
     callback(data)
   })
+
 }
 
 function stop_python(){
 
 
   let url = `${domain}:${port}/stop_python`;
+  try{
+    fetch(url, {
+      method: 'GET'
+    }).then(data => data.text()).then((data)=>{
+      setTimeout(()=>{
+        location.reload()
+      }, 1000)
+      
+    })
+  }
+  catch (e){
+    console.log("Fail")
+  }
+
+
+
+
+}
+
+function check_node(callback){
+  let url = `${domain}:${port}/get_status`;
   fetch(url, {
     method: 'GET'
-  }).then(data => data.text()).then((data)=>{
-    setTimeout(()=>{
-      location.reload()
-    }, 1000)
-    
+  }).then(data => data.json()).then((data)=>{
+    callback("OK")
+  }).catch((e)=>{
+
+    callback("FAIL")
   })
-
-
 
 }

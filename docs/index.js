@@ -29,20 +29,38 @@ function create_status(circle_class, text, onclick){
 
 document.addEventListener("DOMContentLoaded", ()=>{
 
-  get_status((data)=>{
+  check_node((isOk) => {
+
+    if(isOk == "OK"){
+
+      create_status("green-circle", "Node Online", stop_python)
 
 
-    if (data["python"] == 0){
-      create_status("red-circle", "AI Camera Offline", console.log)
+
+      get_status((data)=>{
+
+
+        if (data["python"] == 0){
+          create_status("red-circle", "AI Camera Offline", console.log)
+        }
+        else{
+          create_status("green-circle", "AI Camera Online", stop_python)
+    
+        }
+      })
+
+    }else{
+      create_status("red-circle", "Node Offline", stop_python)
+
+
     }
-    else{
-      create_status("green-circle", "AI Camera Online", stop_python)
-
-    }
-  
 
 
   })
+
+
+
+
 
 
 
