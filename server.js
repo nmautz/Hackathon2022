@@ -199,7 +199,7 @@ app.get("/get_status", (req,res)=>{
 
 
 
-  if(now.getFullYear() == last_year && now.getMonth() == last_month-1 && now.getHours() == last_hour && now.getDate() == last_day){
+  if(now.getFullYear() == last_year && now.getMonth() == last_month-1 && now.getHours() == last_hour && now.getDate() == last_day && json_status["status"] == "Online"){
 
     var min = now.getMinutes()
 

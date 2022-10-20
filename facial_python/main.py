@@ -181,11 +181,19 @@ def end_video():
     return current_lag
 
 
-def update_status():
+def update_status(code):
+
+
+    if code == -1:
+        status =  "Offline"
+    else:
+        status = "Online"
+
+
     now = datetime.now()
 
     f = open("status.json", 'w')
-    x = '{      "status": "OK", "time": { "year":' \
+    x = '{      "status":"' + status + '", "time": { "year":' \
         + str(now.year) + ', "month":  ' \
         + str(now.month) + ', "day":' \
         + str(now.day) + ', "hour": ' \
@@ -194,13 +202,13 @@ def update_status():
     f.write(x)
     print("Wrote")
 
-update_status()
+update_status(0)
 
 while True:
     now = datetime.now()
 
     if now.second == 0 or now.second == 30:
-        update_status()
+        update_status(0)
 
     if current_frames >= max_frames:
         print("No face detected for max time \nEnding video...")
@@ -309,6 +317,8 @@ while True:
 
 
     if os.path.isfile("lock.lck"):
+        update_status(-1)
+        os.remove("lock.lck")
         break
 
 
