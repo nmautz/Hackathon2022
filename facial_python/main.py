@@ -185,7 +185,7 @@ while True:
 
     now = datetime.now()
 
-    if now.second == 0:
+    if now.second == 0 or now.second == 30:
         f = open("status.json", 'w')
         x = '{      "status": "OK", "time": { "year":' \
             + str(now.year) + ', "month":  ' \

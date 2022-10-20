@@ -183,7 +183,46 @@ app.get("/get_people_in_video", (req,res)=>{
 app.get("/get_status", (req,res)=>{
 
 
-  
+  result = {}
+  let str_status = fs.readFileSync("./facial_python/status.json")
+
+  let json_status = JSON.parse(str_status)
+
+
+  let now = new Date()
+
+  let last_min = json_status["time"]["minute"]
+  let last_hour = json_status["time"]["hour"]
+  let last_day = json_status["time"]["day"]
+  let last_month = json_status["time"]["month"]
+  let last_year = json_status["time"]["year"]
+
+
+
+  if(now.getFullYear() == last_year && now.getMonth() == last_month-1 && now.getHours() == last_hour && now.getDate() == last_day){
+
+    var min = now.getMinutes()
+
+    if(min+ 1 > last_min && last_min > min-1) {
+      result["python"] = true 
+
+
+
+    }else{
+      result["python"] = false 
+
+    }
+
+  }else{
+    result["python"] = false 
+  }
+
+
+  res.write(JSON.stringify( result))
+  res.end()
+
+
+
 
 
 
