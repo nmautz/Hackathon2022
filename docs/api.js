@@ -63,3 +63,20 @@ function get_status(callback){
     callback(data)
   })
 }
+
+function stop_python(){
+
+
+  let url = `${domain}:${port}/stop_python`;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.text()).then((data)=>{
+    setTimeout(()=>{
+      location.reload()
+    }, 1000)
+    
+  })
+
+
+
+}

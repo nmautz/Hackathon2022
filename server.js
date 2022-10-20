@@ -217,14 +217,26 @@ app.get("/get_status", (req,res)=>{
     result["python"] = false 
   }
 
-
   res.write(JSON.stringify( result))
   res.end()
 
+})
+
+
+app.get("/stop_python", (req,res)=>{
+
+  fs.appendFile('./facial_python/lock.lck', '', ()=>{console.log("Stopping...")})
+
+
+  res.end("OK")
+
+
+})
+
+app.get("/start_python", (req,res)=>{
 
 
 
 
-
-
+  
 })

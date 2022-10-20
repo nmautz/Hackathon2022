@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
       create_status("red-circle", "AI Camera Offline", console.log)
     }
     else{
-      create_status("green-circle", "AI Camera Online", console.log)
+      create_status("green-circle", "AI Camera Online", stop_python)
 
     }
   
