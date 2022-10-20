@@ -14,10 +14,18 @@ var con = mysql.createConnection({
   database: "hack"
 });
 
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected to " + config.host + " as " + config.user + " on database \'hack\'");
-});
+
+
+
+function open_connection(){
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("Connected to " + config.host + " as " + config.user + " on database \'hack\'");
+  });
+}
+
+
+
 
 let app = express()
 
@@ -31,6 +39,7 @@ app.listen(3000)
 
 
 app.get('/get_videos', (req,res)=>{
+  open_connection()
   let result = []
   let q = "SELECT file_path FROM Video"
   con.query(q, (err,response, fields)=>{
@@ -39,11 +48,14 @@ app.get('/get_videos', (req,res)=>{
     }
 
     res.write(JSON.stringify(result))
+    con.end()
     res.end()
   })
 })
 
 app.get('/get_video', (req, res) =>{
+
+  open_connection()
 
   try{
     let path = "./facial_python/" + req.query.path
@@ -52,9 +64,12 @@ app.get('/get_video', (req, res) =>{
     let video = fs.readFileSync(path)
 
     res.write(video)
+    con.end()
     res.end()
   }
   catch{
+    con.end()
+
     res.end()
   }
   
@@ -68,7 +83,7 @@ app.get('/get_people', (req,res)=>{
 
 
 
-
+  open_connection()
 
   let q = "SELECT f_name, confirmed FROM Face"
   con.query(q, (err,response, fields)=>{
@@ -90,6 +105,7 @@ app.get('/get_people', (req,res)=>{
     }
 
     res.write(JSON.stringify(result))
+    con.end()
     res.end()
   })
 
@@ -98,6 +114,7 @@ app.get('/get_people', (req,res)=>{
 
 app.get('/get_person', (req, res)=>{
 
+  open_connection()
   let name = req.query.name;
   let fpath = "./faces/" + name
   let valid = 1
@@ -124,6 +141,8 @@ app.get('/get_person', (req, res)=>{
       }
         
       res.write(JSON.stringify(result))
+      con.end()
+
       res.end()
       
 
@@ -144,6 +163,8 @@ app.get("/get_video", (req, res)=>{
 
 
 app.get("/get_people_in_video", (req,res)=>{
+
+  open_connection();
 
   let video_title = req.query.title;
 
@@ -172,6 +193,7 @@ app.get("/get_people_in_video", (req,res)=>{
     }
 
     res.write(JSON.stringify(result));
+    con.end()
     res.end()
 
   })

@@ -47,6 +47,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
           create_status("green-circle", "AI Camera Online", stop_python)
     
         }
+
+        if (data["Database"] == 0){
+          create_status("red-circle", "Database Offline", console.log)
+        }else{
+          create_status("green-circle", "Database Online", console.log)
+
+        }
+
       })
 
     }else{
