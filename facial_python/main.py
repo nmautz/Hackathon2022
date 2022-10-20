@@ -181,20 +181,26 @@ def end_video():
     return current_lag
 
 
-while True:
+def update_status():
+    now = datetime.now()
 
+    f = open("status.json", 'w')
+    x = '{      "status": "OK", "time": { "year":' \
+        + str(now.year) + ', "month":  ' \
+        + str(now.month) + ', "day":' \
+        + str(now.day) + ', "hour": ' \
+        + str(now.hour) + ', "minute": ' \
+        + str(now.minute) + '}    }'
+    f.write(x)
+    print("Wrote")
+
+update_status()
+
+while True:
     now = datetime.now()
 
     if now.second == 0 or now.second == 30:
-        f = open("status.json", 'w')
-        x = '{      "status": "OK", "time": { "year":' \
-            + str(now.year) + ', "month":  ' \
-            + str(now.month) + ', "day":'\
-            + str(now.day) +', "hour": '\
-            + str(now.hour)  + ', "minute": '\
-            + str(now.minute) + '}    }'
-        f.write(x)
-        print("Wrote")
+        update_status()
 
     if current_frames >= max_frames:
         print("No face detected for max time \nEnding video...")

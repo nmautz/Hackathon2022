@@ -26,14 +26,24 @@ function create_status(circle_class, text, onclick){
 
 
 
+
 document.addEventListener("DOMContentLoaded", ()=>{
 
-  create_status("green-circle", "Node Server Online", ()=>{
+  get_status((data)=>{
 
-    console.log("clicked!")
+
+    if (data["python"] == 0){
+      create_status("red-circle", "AI Camera Offline", console.log)
+    }
+    else{
+      create_status("green-circle", "AI Camera Online", console.log)
+
+    }
+  
 
 
   })
+
 
 
 })

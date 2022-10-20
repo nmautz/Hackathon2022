@@ -203,7 +203,7 @@ app.get("/get_status", (req,res)=>{
 
     var min = now.getMinutes()
 
-    if(min+ 1 > last_min && last_min > min-1) {
+    if(last_min == min) {
       result["python"] = true 
 
 

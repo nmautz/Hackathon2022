@@ -55,3 +55,11 @@ function get_people_in_video(v_title, callback){
 
 }
 
+function get_status(callback){
+  let url = `${domain}:${port}/get_status`;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+}
