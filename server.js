@@ -217,8 +217,21 @@ app.get("/get_status", (req,res)=>{
     result["python"] = false 
   }
 
-  res.write(JSON.stringify( result))
-  res.end()
+
+
+  con.ping((err)=>{
+    if(err){
+      result["Database"] = false
+    }else{
+      result["Database"] = true
+
+    }
+    res.write(JSON.stringify( result))
+    res.end()
+  })
+
+
+
 
 })
 
