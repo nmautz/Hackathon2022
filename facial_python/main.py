@@ -8,11 +8,20 @@ import numpy as np
 import mysql.connector as mc
 import uuid
 import os.path
+from os.path import exists
 from datetime import datetime
+
+
 
 PROCESS_EVERY_FRAMES = 5
 PROCESS_QUALITY = 1
 
+
+if exists("start.lck"):
+    exit(0)
+
+f = open("start.lck", 'w')
+f.close()
 
 def add_video_to_db(path):
     global people
@@ -318,6 +327,7 @@ while True:
 
     if os.path.isfile("lock.lck"):
         update_status(-1)
+        os.remove("start.lck")
         os.remove("lock.lck")
         break
 
