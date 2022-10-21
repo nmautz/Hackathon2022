@@ -7,20 +7,30 @@ const extractFrames = require('ffmpeg-extract-frames')
 const fs = require('fs')
 
 
-var con = mysql.createConnection({
-  host: config.host,
-  user: config.user,
-  password: config.pass,
-  database: "hack"
-});
+var con = undefined
 
 
 
 
-function open_connection(){
+function open_connection(callback){
+
+  con = mysql.createConnection({
+    host: config.host,
+    user: config.user,
+    password: config.pass,
+    database: "hack"
+  });
+
+
   con.connect(function(err) {
-    if (err) throw err;
-    console.log("Connected to " + config.host + " as " + config.user + " on database \'hack\'");
+    if (err){
+      console.log("No DB connection")
+      callback(0)
+    }else{
+      console.log("Connected to " + config.host + " as " + config.user + " on database \'hack\'");
+      callback(1)
+    }
+
   });
 }
 
@@ -39,39 +49,59 @@ app.listen(3000)
 
 
 app.get('/get_videos', (req,res)=>{
-  open_connection()
-  let result = []
-  let q = "SELECT file_path FROM Video"
-  con.query(q, (err,response, fields)=>{
-    for(let path of response){
-      result.push(path.file_path)
-    }
+  open_connection((valid)=>{
 
-    res.write(JSON.stringify(result))
-    con.end()
-    res.end()
+    if(valid){
+      let result = []
+      let q = "SELECT file_path FROM Video"
+      con.query(q, (err,response, fields)=>{
+        for(let path of response){
+          result.push(path.file_path)
+        }
+    
+        res.write(JSON.stringify(result))
+        con.end()
+        res.end()
+      })
+    }else{
+      res.end()
+    }
   })
+
 })
 
 app.get('/get_video', (req, res) =>{
 
-  open_connection()
+  open_connection((valid)=>{
 
-  try{
-    let path = "./facial_python/" + req.query.path
+    if(valid){
+      try{
+        let path = "./facial_python/" + req.query.path
+    
+    
+        let video = fs.readFileSync(path)
+    
+        res.write(video)
+        con.end()
+        res.end()
+      }
+      catch{
+        con.end()
+    
+        res.end()
+      }
 
 
-    let video = fs.readFileSync(path)
+    }else{
+      res.end()
+    }
 
-    res.write(video)
-    con.end()
-    res.end()
-  }
-  catch{
-    con.end()
 
-    res.end()
-  }
+
+
+  })
+
+
   
 })
 
@@ -83,71 +113,92 @@ app.get('/get_people', (req,res)=>{
 
 
 
-  open_connection()
+  open_connection((valid)=>{
 
-  let q = "SELECT f_name, confirmed FROM Face"
-  con.query(q, (err,response, fields)=>{
-    for(let name of response){
+    if(valid){
 
-      try{
-        let f1 = fs.readdirSync("./facial_python/faces/" + name.f_name)[0]
-        if (f1 != undefined){
-          let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
-
-          result[name.f_name] = [JSON.stringify(img_path), name.confirmed]
-
+      let q = "SELECT f_name, confirmed FROM Face"
+      con.query(q, (err,response, fields)=>{
+        for(let name of response){
+    
+          try{
+            let f1 = fs.readdirSync("./facial_python/faces/" + name.f_name)[0]
+            if (f1 != undefined){
+              let img_path = "./facial_python/faces/" + name.f_name + "/" + f1
+    
+              result[name.f_name] = [JSON.stringify(img_path), name.confirmed]
+    
+            }
+          }
+          catch(e){
+            console.log("Face Database corrupted on " + name.f_name)
+          }
+    
         }
-      }
-      catch(e){
-        console.log("Face Database corrupted on " + name.f_name)
-      }
+    
+        res.write(JSON.stringify(result))
+        con.end()
+        res.end()
+      })
 
+    }else{
+      res.end()
     }
 
-    res.write(JSON.stringify(result))
-    con.end()
-    res.end()
+
+
+
   })
-
-
 })
 
 app.get('/get_person', (req, res)=>{
 
-  open_connection()
-  let name = req.query.name;
-  let fpath = "./faces/" + name
-  let valid = 1
-  let file_names = undefined
-  try{
-    file_names = fs.readdirSync("./facial_python/faces/" + name)
-  }
-  catch{
-    console.log("Face Database corrupted on " + name)
-    res.write("ERROR")
-    valid = 0
-  }
+  open_connection((valid_connection)=>{
 
-  if(valid){
-    q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
-
-    con.query(q, [fpath], (err, response, fields)=>{
-
-      result = {
-
-        "images": file_names,
-        "videos": response
-
+    if(valid_connection){
+      let name = req.query.name;
+      let fpath = "./faces/" + name
+      let valid = 1
+      let file_names = undefined
+      try{
+        file_names = fs.readdirSync("./facial_python/faces/" + name)
       }
-        
-      res.write(JSON.stringify(result))
-      con.end()
+      catch{
+        console.log("Face Database corrupted on " + name)
+        res.write("ERROR")
+        valid = 0
+      }
+    
+      if(valid){
+        q = 'SELECT v_path FROM VideoPeople WHERE(f_path=?)'
+    
+        con.query(q, [fpath], (err, response, fields)=>{
+    
+          result = {
+    
+            "images": file_names,
+            "videos": response
+    
+          }
+            
+          res.write(JSON.stringify(result))
+          con.end()
+    
+          res.end()
+          
+    
+        })
+      }
 
+    }
+    else{
       res.end()
-      
+    }
 
-    })
-  }
+
+
+  })
+
 })
 
 app.get("/get_video", (req, res)=>{
@@ -164,39 +215,50 @@ app.get("/get_video", (req, res)=>{
 
 app.get("/get_people_in_video", (req,res)=>{
 
-  open_connection();
+  open_connection((valid)=>{
 
-  let video_title = req.query.title;
+    if(valid){
+      let video_title = req.query.title;
 
-  let video_path = "./videos/" + video_title + ".webm";
+      let video_path = "./videos/" + video_title + ".webm";
+    
+      //select * from VideoPeople where (v_path = "./videos/0625c1c5-0f59-48a8-b59b-11f4b7cb3041.webm")
+      q = "SELECT f_path FROM VideoPeople WHERE(v_path=?)"
+    
+      con.query(q, [video_path], (err, response, fields)=>{
+    
+        let result = []
+    
+        for(let resp of response){
+          let f_path = resp.f_path
+          
+          f_dir = "./facial_python/" + f_path.substring(2, f_path.length) + "/"
+    
+          let pics = fs.readdirSync(f_dir)
+          let name = resp.f_path.substring(8,f_path.length)
+    
+          let obj = {}
+    
+          obj[name] = pics[0]
+    
+          result.push(obj)
+        }
+    
+        res.write(JSON.stringify(result));
+        con.end()
+        res.end()
+    
+      })
 
-  //select * from VideoPeople where (v_path = "./videos/0625c1c5-0f59-48a8-b59b-11f4b7cb3041.webm")
-  q = "SELECT f_path FROM VideoPeople WHERE(v_path=?)"
-
-  con.query(q, [video_path], (err, response, fields)=>{
-
-    let result = []
-
-    for(let resp of response){
-      let f_path = resp.f_path
-      
-      f_dir = "./facial_python/" + f_path.substring(2, f_path.length) + "/"
-
-      let pics = fs.readdirSync(f_dir)
-      let name = resp.f_path.substring(8,f_path.length)
-
-      let obj = {}
-
-      obj[name] = pics[0]
-
-      result.push(obj)
+    }
+    else{
+      res.end()
     }
 
-    res.write(JSON.stringify(result));
-    con.end()
-    res.end()
 
-  })
+  });
+
+
 
 
 
@@ -241,16 +303,25 @@ app.get("/get_status", (req,res)=>{
 
 
 
-  con.ping((err)=>{
-    if(err){
-      result["Database"] = false
-    }else{
-      result["Database"] = true
+  
+  open_connection((valid)=>{
 
+
+    if(valid){
+      result["Database"] = true
+    }else{
+      result["Database"] = false
     }
-    res.write(JSON.stringify( result))
+
+    res.write(JSON.stringify(result))
     res.end()
+
   })
+
+
+
+
+
 
 
 
