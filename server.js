@@ -4,7 +4,8 @@ var mysql = require("mysql");
 const config = require('./config.json'); 
 const { response } = require("express");
 const extractFrames = require('ffmpeg-extract-frames')
-const fs = require('fs')
+const fs = require('fs');
+const { spawn } = require("child_process");
 
 
 var con = undefined
@@ -342,10 +343,13 @@ app.get("/stop_python", (req,res)=>{
 
 app.get("/start_python", (req,res)=>{
 
+  console.log("cd")
 
-
-
-  
+  process.chdir("./facial_python/")
+  console.log("cd")
+  spawn("python3", ["main.py"])
+  process.chdir("../")
+  res.end("OK")
 })
 
 

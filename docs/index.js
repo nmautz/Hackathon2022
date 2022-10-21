@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
         if (data["python"] == 0){
-          create_status("red-circle", "AI Camera Offline", console.log)
+          create_status("red-circle", "AI Camera Offline", start_python)
         }
         else{
           create_status("green-circle", "AI Camera Online", stop_python)

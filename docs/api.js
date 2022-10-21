@@ -89,6 +89,29 @@ function stop_python(){
 
 }
 
+function start_python(){
+
+
+  let url = `${domain}:${port}/start_python`;
+  try{
+    fetch(url, {
+      method: 'GET'
+    }).then(data => data.text()).then((data)=>{
+      setTimeout(()=>{
+        location.reload()
+      }, 10000)
+      
+    })
+  }
+  catch (e){
+    console.log("Fail")
+  }
+
+
+
+
+}
+
 function check_node(callback){
   let url = `${domain}:${port}/get_status`;
   fetch(url, {
