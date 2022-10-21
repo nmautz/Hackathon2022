@@ -314,6 +314,7 @@ app.get("/get_status", (req,res)=>{
     }
 
     res.write(JSON.stringify(result))
+    con.end()
     res.end()
 
   })
