@@ -347,3 +347,39 @@ app.get("/start_python", (req,res)=>{
 
   
 })
+
+
+app.get("/wipe_database", (req, res)=>{
+
+  open_connection((valid)=>{
+
+    if(valid){
+
+      let q = "DELETE FROM VideoPeople"
+
+      con.query(q)
+      con.commit()
+
+      q = "DELETE FROM Face"
+
+      con.query(q)
+      con.commit()
+
+      q = "DELETE FROM Video"
+
+      con.query(q)
+      con.commit()
+
+
+      con.end()
+      res.end("OK")
+    }else{
+      res.end("ERROR")
+
+    }
+
+  })
+
+
+
+})
