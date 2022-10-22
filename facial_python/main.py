@@ -28,6 +28,7 @@ except Exception as e:
 
 PROCESS_EVERY_FRAMES = config["process_interval_frames"]
 PROCESS_QUALITY = config["process_quality"]
+THUMBNAIL_QUALITY = 0.4
 
 
 if exists("start.lck"):
@@ -133,10 +134,11 @@ for dir in face_dirs:
         image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
         try:
             face_encoding = face_recognition.face_encodings(image)[0]
+            known_face_encodings.append(face_encoding)
+            known_face_names.append(dir)
         except:
             pass
-        known_face_encodings.append(face_encoding)
-        known_face_names.append(dir)
+
 
 # Create arrays of known face encodings and their names
 
@@ -251,7 +253,7 @@ while True:
     if process_this_frame == 0:
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=PROCESS_QUALITY, fy=PROCESS_QUALITY)
-        thumbnail = small_frame
+        thumbnail = cv2.resize(frame, (0, 0), fx=THUMBNAIL_QUALITY, fy=THUMBNAIL_QUALITY)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
