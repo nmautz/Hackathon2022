@@ -4,8 +4,9 @@ const path = require('path')
 const url_tool = require("url")
 
 
-const host = '10.0.0.211';
-const port = 8000;
+const config = require("./config.json")
+const host = config.web_host;
+const port = config.web_port;
 
 
 

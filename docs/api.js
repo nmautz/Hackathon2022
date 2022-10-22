@@ -115,7 +115,8 @@ function start_python(){
 function check_node(callback){
   let url = `${domain}:${port}/get_status`;
   fetch(url, {
-    method: 'GET'
+    method: 'GET',
+    timeout: 50
   }).then(data => data.json()).then((data)=>{
     callback("OK")
   }).catch((e)=>{
