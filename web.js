@@ -11,6 +11,7 @@ const port = 8000;
 
 const requestListener = function (req, res) {
 
+
   try{
     let url = req.url
     let url_mod = ""
@@ -19,7 +20,14 @@ const requestListener = function (req, res) {
       res.setHeader("Content-Type", "text/html");
       res.writeHead(200);
       fs.readFile("./docs/index.html", (err, data)=>{
+        if(err){
+          res.write("ERROR: " + err)
+          res.end()
+
+
+        }
         res.write(data)
+
         res.end()
       })
     }else{
@@ -48,17 +56,28 @@ const requestListener = function (req, res) {
 
       }
       res.writeHead(200);
-      res.write(fs.readFileSync("./docs" + url_mod + url_tool.parse(url).pathname))
+
+      let file_path = "./docs" + url_mod + url_tool.parse(url).pathname
+      fs.readFile(file_path, (err, data)=>{
+        if(err){
+          res.write("ERROR: " + err)
+          res.end()
+
+
+        }
+
+        res.write(data)
+        res.end()
+
+      })
+
     }
   }
   catch (e){
     res.write("ERROR: " + e)
+    res.end()
   }
   
-
-
-
-  res.end()
 
 
 };
