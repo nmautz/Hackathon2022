@@ -29,7 +29,7 @@ addEventListener('DOMContentLoaded', (event) => {
         addAllRecordings(urlParams.get('name'))
 
         try{
-            document.getElementById("person_title").innerHTML = "Recordings: " + urlParams.get('name')
+            document.getElementById("header_person_name").innerHTML = "Recordings: " + urlParams.get('name')
 
         }
         catch(e){
