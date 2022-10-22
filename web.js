@@ -1,41 +1,60 @@
 const http = require("http");
 const fs = require("fs")
 const path = require('path')
+const url_tool = require("url")
 
 
-const host = 'localhost';
+const host = '10.0.0.211';
 const port = 8000;
 
 
 
 const requestListener = function (req, res) {
 
-  let url = req.url
+  try{
+    let url = req.url
+    let url_mod = ""
 
-  if(url == '/'){
-    res.setHeader("Content-Type", "text/html");
-    res.writeHead(200);
-    res.write(fs.readFileSync("./docs/index.html"))
-  }else{
+    if(url == '/'){
+      res.setHeader("Content-Type", "text/html");
+      res.writeHead(200);
+      fs.readFile("./docs/index.html", (err, data)=>{
+        res.write(data)
+        res.end()
+      })
+    }else{
+  
+      
+      let ext = path.extname(url_tool.parse(req.url).pathname)
+      if(ext == ".css"){
+        res.setHeader("Content-Type", "text/css");  
+      }else if(ext == ".js"){
+        res.setHeader("Content-Type", "text/javascript");
+      }else if(ext == ".png"){
+        res.setHeader("Content-Type", "image/png");
+        url_mod = "/.."
+      }else if(ext == ".html"){
+        res.setHeader("Content-Type", "text/html");
+        
+        
+      }else if(ext == ".webm"){
+        res.setHeader("Content-Type", "video/webm");
+        url_mod = "/.."
 
-    let ext = path.extname(url)
-    if(ext == ".css"){
-      res.setHeader("Content-Type", "text/css");
 
 
+      }else{
+        console.log(ext + " not yet supported..\nFull URL:  " + url)
 
-
-    }else if(ext == ".js"){
-      res.setHeader("Content-Type", "text/javascript");
-
-
+      }
+      res.writeHead(200);
+      res.write(fs.readFileSync("./docs" + url_mod + url_tool.parse(url).pathname))
     }
-    res.writeHead(200);
-    res.write(fs.readFileSync("./docs" + url))
-
-
-
   }
+  catch (e){
+    res.write("ERROR: " + e)
+  }
+  
 
 
 
