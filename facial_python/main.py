@@ -10,6 +10,7 @@ import uuid
 import os.path
 from os.path import exists
 from datetime import datetime
+import time
 
 
 
@@ -28,6 +29,7 @@ except Exception as e:
 
 PROCESS_EVERY_FRAMES = config["process_interval_frames"]
 PROCESS_QUALITY = config["process_quality"]
+THUMBNAIL_QUALITY = 0.4
 
 
 if exists("start.lck"):
@@ -133,10 +135,11 @@ for dir in face_dirs:
         image = face_recognition.load_image_file("./faces/" + dir + "/" + image_path)
         try:
             face_encoding = face_recognition.face_encodings(image)[0]
+            known_face_encodings.append(face_encoding)
+            known_face_names.append(dir)
         except:
             pass
-        known_face_encodings.append(face_encoding)
-        known_face_names.append(dir)
+
 
 # Create arrays of known face encodings and their names
 
@@ -150,6 +153,7 @@ process_this_frame = 0
 vid_cod = cv2.VideoWriter_fourcc(*'VP80')
 output = None
 video_started = False
+start_time = None
 path = None
 
 
@@ -176,6 +180,7 @@ def add_frame_to_output(target_frame):
     global output
     global vid_cod
     global path
+    global start_time
 
     if not video_started:
         path = "./videos/" + str(uuid.uuid4()) + ".webm"
@@ -185,6 +190,8 @@ def add_frame_to_output(target_frame):
         except Exception as e:
             print("Loading anyways")
         video_started = True
+        start_time = time.perf_counter()
+
 
     output.write(target_frame)
 
@@ -199,6 +206,9 @@ def end_video():
     output.release()
     add_video_to_db(path)
     print("finished clip")
+    end_time = time.perf_counter()
+    duration = end_time-start_time
+    print(duration)
     video_started = False
     setup_video()
     current_lag = 0
@@ -251,7 +261,7 @@ while True:
     if process_this_frame == 0:
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=PROCESS_QUALITY, fy=PROCESS_QUALITY)
-        thumbnail = small_frame
+        thumbnail = cv2.resize(frame, (0, 0), fx=THUMBNAIL_QUALITY, fy=THUMBNAIL_QUALITY)
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
