@@ -51,14 +51,21 @@
   margin-left: 20%;
   font-size: large;
 
+  transition: all ease-in-out 250ms;
 
+
+}
+
+.person:hover{
+  scale: 1.2;
+  cursor: pointer;
 }
 
 .profile{
   transition: all 250ms;
 }
 
-.profile :hover{
+.profile:hover{
   scale: 1.2;
   cursor: pointer;
 }
