@@ -153,11 +153,11 @@ video_started = False
 path = None
 
 
-max_frames = 60 # specifies max video length
+max_frames = config["frame_limit"] # specifies max video length
 current_frames = 0
 
 # vars used for recording frames after off screen
-max_stop_lag = 60
+max_stop_lag = config["trailing_frames"]
 current_lag = 0
 
 # holds detected people per clip
