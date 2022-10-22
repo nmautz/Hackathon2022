@@ -13,8 +13,21 @@ from datetime import datetime
 
 
 
-PROCESS_EVERY_FRAMES = 5
-PROCESS_QUALITY = 1
+config = None
+try:
+    f = open('config.json')
+    config = json.load(f)
+    print("Config file loaded")
+except FileNotFoundError:
+    print("No Config File Found!")
+    exit(1)
+except Exception as e:
+    print(e)
+    exit(1)
+
+
+PROCESS_EVERY_FRAMES = config["process_interval_frames"]
+PROCESS_QUALITY = config["process_quality"]
 
 
 if exists("start.lck"):
@@ -82,21 +95,21 @@ def add_video_to_db(path):
     cropped_faces = {}
 
 
-config = None
+server_config = None
 try:
     f = open('../config.json')
-    config = json.load(f)
-    print("Config file loaded for user " + config["user"])
+    server_config = json.load(f)
+    print("Server Config file loaded for user " + server_config["user"])
 except FileNotFoundError:
-    print("No Config File Found!")
+    print("No Server Config File Found!")
     exit(1)
 except Exception as e:
     print(e)
     exit(1)
 
-usr = config['user']
-pwd = config['pass']
-hst = config['host']
+usr = server_config['user']
+pwd = server_config['pass']
+hst = server_config['host']
 dab = 'hack'
 # create a connection
 con = mc.connect(user=usr, password=pwd, host=hst, database=dab)
@@ -181,6 +194,8 @@ setup_video()
 
 def end_video():
     global video_started
+    if output is None:
+        return 0
     output.release()
     add_video_to_db(path)
     print("finished clip")
@@ -275,12 +290,15 @@ while True:
                 best_match_index = np.argmin(face_distances)
                 if matches[best_match_index]:
                     name = known_face_names[best_match_index]
+                    if config["record_known"]:
+                        print(111)
+                        add_frame_to_output(frame)
+
+                else: # Unknown person
                     add_frame_to_output(frame)
 
-                else:
-                    add_frame_to_output(frame)
             else:
-                add_frame_to_output(frame)
+                add_frame_to_output(frame) # Known person
 
             face_names.append(name)
 
