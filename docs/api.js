@@ -124,3 +124,39 @@ function check_node(callback){
   })
 
 }
+
+
+function wipe_database(callback){
+  let url = `${domain}:${port}/wipe_database`;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+}
+
+function get_camera_settings(callback){
+  let url = `${domain}:${port}/get_camera_settings`;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+
+}
+
+function set_camera_settings(callback, options){
+
+  let frame_limit = options.frame_limit
+  let trailing_frames = options.trailing_frames
+  let record_known = options.record_known
+  let process_quality = options.process_quality
+  let process_interval_frames = options.process_interval_frames
+
+  let url = `${domain}:${port}/set_camera_settings?frame_limit=${frame_limit}&trailing_frames=${trailing_frames}&record_known=${record_known}&process_quality=${process_quality}&process_interval_frames=${process_interval_frames}`;
+  fetch(url, {
+    method: 'GET'
+  }).then(data => data.json()).then((data)=>{
+    callback(data)
+  })
+}
