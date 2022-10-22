@@ -30,6 +30,7 @@ addEventListener('DOMContentLoaded', (event) => {
 
         try{
             document.getElementById("person_title").innerHTML = "Recordings of: " + urlParams.get('name')
+
         }
         catch(e){
             
