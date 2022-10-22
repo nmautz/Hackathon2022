@@ -70,15 +70,17 @@ const requestListener = function (req, res) {
           res.end()
 
 
+        }else{
+          try{
+            res.write(data)
+  
+          }catch{
+            res.write("ERROR")
+          }
+          res.end()
         }
 
-        try{
-          res.write(data)
 
-        }catch{
-          res.write("ERROR")
-        }
-        res.end()
 
       })
 
