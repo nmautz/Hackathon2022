@@ -53,3 +53,12 @@
 
 
 }
+
+.profile{
+  transition: all 250ms;
+}
+
+.profile :hover{
+  scale: 1.2;
+  cursor: pointer;
+}
