@@ -249,9 +249,9 @@ while True:
 
     # Only process every third frame of video to save time
     if process_this_frame == 0:
-        thumbnail = frame
         # Resize frame of video to 1/4 size for faster face recognition processing
         small_frame = cv2.resize(frame, (0, 0), fx=PROCESS_QUALITY, fy=PROCESS_QUALITY)
+        thumbnail = small_frame
 
         # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
         rgb_small_frame = small_frame[:, :, ::-1]
@@ -291,7 +291,6 @@ while True:
                 if matches[best_match_index]:
                     name = known_face_names[best_match_index]
                     if config["record_known"]:
-                        print(111)
                         add_frame_to_output(frame)
 
                 else: # Unknown person
