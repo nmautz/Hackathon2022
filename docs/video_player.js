@@ -8,6 +8,10 @@ function add_person_to_video_people(person, img_src){
 
   div.appendChild(img)
   div.appendChild(p)
+  div.className = "profile"
+  div.addEventListener('click', (e) => {
+    location.href = "person.html" + "?name=" + name
+  })
 
   div.classList.add("person")
 
@@ -23,10 +27,17 @@ function add_person_to_video_people(person, img_src){
 
 
 document.addEventListener("DOMContentLoaded", ()=>{
-
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
 
+  if(urlParams.get('name') != null){
+    try{
+      document.getElementById("header_person_name").innerHTML = "Recordings: " + urlParams.get('name')
+    }
+    catch(e){
+        
+    }
+  }
   const title = urlParams.get("vid-title");
 
   if(title == null){
@@ -59,3 +70,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
 
 
 })
+
