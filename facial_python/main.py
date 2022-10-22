@@ -10,6 +10,7 @@ import uuid
 import os.path
 from os.path import exists
 from datetime import datetime
+import time
 
 
 
@@ -152,6 +153,7 @@ process_this_frame = 0
 vid_cod = cv2.VideoWriter_fourcc(*'VP80')
 output = None
 video_started = False
+start_time = None
 path = None
 
 
@@ -178,6 +180,7 @@ def add_frame_to_output(target_frame):
     global output
     global vid_cod
     global path
+    global start_time
 
     if not video_started:
         path = "./videos/" + str(uuid.uuid4()) + ".webm"
@@ -187,6 +190,8 @@ def add_frame_to_output(target_frame):
         except Exception as e:
             print("Loading anyways")
         video_started = True
+        start_time = time.perf_counter()
+
 
     output.write(target_frame)
 
@@ -201,6 +206,9 @@ def end_video():
     output.release()
     add_video_to_db(path)
     print("finished clip")
+    end_time = time.perf_counter()
+    duration = end_time-start_time
+    print(duration)
     video_started = False
     setup_video()
     current_lag = 0
