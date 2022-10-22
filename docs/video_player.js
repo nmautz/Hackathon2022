@@ -8,9 +8,11 @@ function add_person_to_video_people(person, img_src){
 
   div.appendChild(img)
   div.appendChild(p)
-  div.className = "profile"
   div.addEventListener('click', (e) => {
-    location.href = "person.html" + "?name=" + name
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if(urlParams.get('name') != null)
+      location.href = "person.html" + "?name=" + urlParams.get('name')
   })
 
   div.classList.add("person")
