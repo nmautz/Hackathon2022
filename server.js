@@ -387,3 +387,41 @@ app.get("/wipe_database", (req, res)=>{
 
 
 })
+
+
+app.get("/get_camera_settings", (req, res)=>{
+
+  let config = JSON.parse (fs.readFileSync("./facial_python/config.json"))
+
+  res.write(JSON.stringify(config))
+  res.end()
+
+
+})
+
+app.get("/set_camera_settings", (req, res)=>{
+
+  let frame_limit = req.query.frame_limit
+  let trailing_frames = req.query.trailing_frames
+  let record_known = req.query.record_known
+  let process_quality = req.query.process_quality
+  let process_interval_frames = req.query.process_interval_frames
+
+
+  let data = 
+  `{
+    "version": 1.0,
+    "frame_limit": ${frame_limit},
+    "trailing_frames": ${trailing_frames}, 
+    "record_known": ${record_known},
+    "process_quality": ${process_quality},
+    "process_interval_frames": ${process_interval_frames}
+  }`
+
+  fs.writeFileSync("./facial_python/config.json", data)
+
+
+  res.end(0)
+
+
+})
