@@ -1,10 +1,12 @@
-function addRecording(video,thumbnail)
+function addRecording(video,thumbnail,name)
 {
     let div = document.createElement("div")
     div.className = "recording"
     div.addEventListener("click", (e) =>{
         console.log(video)
         window.location.href = "./video_player.html?vid-title="+video;
+        if(urlParams.get('name') != null)
+            location.href = "person.html" + "?name=" + name
     })
  
     let img = document.createElement("img")
